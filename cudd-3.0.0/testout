@@ -1,0 +1,50 @@
+digraph "DD" {
+size = "7.5,10"
+center = true;
+edge [dir = none];
+{ node [shape = plaintext];
+  edge [style = invis];
+  "CONST NODES" [style = invis];
+" x " -> " y " -> " z " -> "CONST NODES"; 
+}
+{ rank = same; node [shape = box]; edge [style = invis];
+"  f  " -> "  g  " -> "  h  "; }
+{ rank = same; " x ";
+"0x76";
+"0x74";
+"0x83";
+}
+{ rank = same; " y ";
+"0x82";
+"0x75";
+"0x72";
+"0x78";
+}
+{ rank = same; " z ";
+"0x73";
+}
+{ rank = same; "CONST NODES";
+{ node [shape = box]; "0x6d";
+}
+}
+"  f  " -> "0x76" [style = solid];
+"  g  " -> "0x83" [style = solid];
+"  h  " -> "0x74" [style = dotted];
+"0x76" -> "0x75";
+"0x76" -> "0x75" [style = dotted];
+"0x74" -> "0x72";
+"0x74" -> "0x72" [style = dotted];
+"0x83" -> "0x82";
+"0x83" -> "0x78" [style = dashed];
+"0x82" -> "0x6d";
+"0x82" -> "0x73" [style = dashed];
+"0x75" -> "0x73";
+"0x75" -> "0x73" [style = dotted];
+"0x72" -> "0x6d";
+"0x72" -> "0x6d" [style = dotted];
+"0x78" -> "0x73";
+"0x78" -> "0x6d" [style = dotted];
+"0x73" -> "0x6d";
+"0x73" -> "0x6d" [style = dotted];
+"0x6d" [label = "1"];
+}
