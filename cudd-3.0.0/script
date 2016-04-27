@@ -1,0 +1,3 @@
+make
+make check
+nanotrav/nanotrav hw5.blif

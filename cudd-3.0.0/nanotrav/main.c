@@ -97,8 +97,6 @@ static int reorder (BnetNetwork *net, DdManager *dd, NtrOptions *option);
 static void freeOption (NtrOptions *option);
 static DdManager * startCudd (NtrOptions *option, int nvars);
 static int ntrReadTree (DdManager *dd, char *treefile, int nvars);
-
-
 /**AutomaticEnd***************************************************************/
 
 /*---------------------------------------------------------------------------*/
@@ -127,7 +125,7 @@ main(
     NtrOptions	    *option;	    /* options */
     FILE            *fp1;           /* first network file pointer */
     BnetNetwork     *net1 = NULL;   /* first network */
-    DdManager	    *dd;            /* pointer to DD manager & temp DD manager*/
+    DdManager	    *dd, *dd_quo;   /* pointer to DD manager & quotient DD manager*/
     int		        exitval;	    /* return value of Cudd_CheckZeroRef */
     int		        ok;		        /* overall return value from main() */
     int		        result;		    /* stores the return value of functions */
@@ -193,9 +191,13 @@ main(
     */
     dd = startCudd(option,net1->ninputs);
     if (dd == NULL) { exit(2); }
+    dd_quo = startCudd(option,net1->ninputs);
+    if (dd_quo == NULL) { exit(2); }
  
     /* Build the BDDs for the nodes of the first network. */
     result = Ntr_buildDDs(net1,dd,option,NULL);
+    if (result == 0) { exit(2); }
+    result = Ntr_buildDDs(net1,dd_quo,option,NULL);
     if (result == 0) { exit(2); }
     
     /*Bnet_PrintNetwork(net1);
@@ -236,19 +238,30 @@ main(
     Cudd_AutodynDisable(dd);
 
     printf("Top node: 0x%X \n", node->dd);
+    printf("Top node level: %d \n", node->dd->index);
+   // printf("Top node ref count: %d \n", node->dd->ref);
 
-    printf("T child: 0x%X \n", node->dd->type.kids.T);
-    printf("T child index: %d \n", node->dd->type.kids.T->index);
-    printf("E child: 0x%X \n", node->dd->type.kids.E);
-    printf("E child index: %d \n", node->dd->type.kids.T->index);
+    printf("Top T child: 0x%X \n", node->dd->type.kids.T);
+    printf("Top T child index: %d \n", node->dd->type.kids.T->index);
+    printf("Top E child: 0x%X \n", node->dd->type.kids.E);
+    printf("Top E child index: %d \n", node->dd->type.kids.E->index);
+    
+    printf("TopT T child: 0x%X \n", node->dd->type.kids.T->type.kids.T);
+    printf("TopT T child index: %d \n", node->dd->type.kids.T->type.kids.T->index);
+    printf("TopT E child: 0x%X \n", node->dd->type.kids.T->type.kids.E);
+    printf("TopT E child index: %d \n", node->dd->type.kids.T->type.kids.E->index);
    
+    printf("TopE T child: 0x%X \n", node->dd->type.kids.E->type.kids.T);
+    printf("TopE T child index: %d \n", node->dd->type.kids.E->type.kids.T->index);
+    printf("TopE E child: 0x%X \n", node->dd->type.kids.E->type.kids.E);
+    printf("TopE E child index: %d \n", node->dd->type.kids.E->type.kids.E->index);
+    
     /*
     DdNode *tmp_node = node->dd;
     DdNode *tmp_T, tmp_E;
     for(i = 0; i < node->nfo; i++){
         tmp_T = tmp_node->dd->type.kids.T;
-        printf("T child: 0x%X \n",tmp_T);
-        tmp_E = tmp_node->dd->type.kids.E;
+        printf("T child: 0x%X \n",tmp_T); tmp_E = tmp_node->dd->type.kids.E;
         printf("E child: 0x%X \n",tmp_E);
         
     }
@@ -257,9 +270,59 @@ main(
     /* Extract each node in the BDD */ 
     DdGen *test_gen;
     DdNode *test_node;
-    Cudd_ForeachNode(dd,node->dd,test_gen,test_node)
-    printf(" Test Node 0x%X \n", test_node);
+    Cudd_ForeachNode(dd,node->dd,test_gen,test_node){
+    printf(" Test Node 0x%X \n", test_node);}
+   
+    //Traversing the BDD 
+    printf("Top node: 0x%X \n", node->dd);
+    //printf("Number of nodes: %d \n", dd->maxLive);
     
+    DdNode* boundset [] = {0,0,0,0,0};
+    DdNode* freeset [] = {0,0,0,0,0};
+    int cutLevel = 2;
+    int m = 0;
+    int n = 0;
+    Cudd_ForeachNode(dd,node->dd,test_gen,test_node){
+        i = test_node->index;
+        printf("Node: %X \n", test_node);
+        printf("Node index: %d \n", test_node->index);
+        printf("i: %d \n", i);
+        if(i < cutLevel)
+            boundset[m++] = test_node;
+        else
+            freeset[n++] = test_node;
+    }
+
+    printf("m: %d\n", m);
+    printf("n: %d\n", n);
+    printf("Bound Set:");
+    for(i = 0; i < m; i++)
+        printf(" %X,", boundset[i]);
+    printf("\n");
+    printf("Free Set:");
+    for(i = 0; i < n; i++)
+        printf(" %X,", freeset[i]);
+    printf("\n");
+
+    int sigZeroEdges = 0;
+    // Determine Sigma Zero edges
+    for(i = 0; i < m; i++){
+        test_node = boundset[i];
+        printf("\n\n\n T node value: %X\n",Cudd_T(test_node));
+        if((Cudd_T(test_node) == Cudd_Complement(dd->one)))// && Cudd_IsComplement(test_node->type.kids.T))// || (Cudd_T(test_node) == dd->zero)) // == 159383551);    
+            // Sigma Zero
+            sigZeroEdges++;
+        printf("number edges: %d \n", sigZeroEdges);
+        printf("E node value: %X\n",Cudd_E(test_node));
+        if((Cudd_E(test_node) == Cudd_Complement(dd->one)))// && Cudd_IsComplement(test_node->type.kids.E))// || (Cudd_E(test_node) == dd->zero))// == 159383551);     
+            // Sigma Zero
+            sigZeroEdges++;
+        printf("number edges: %d \n", sigZeroEdges);
+    }
+   
+    printf("zero node %X \n", dd->zero);
+     
+    printf("one node compliment %X \n", Cudd_Complement(dd->one));
 
     exit(0);
 
