@@ -113,19 +113,19 @@ edge [dir = none];
 { rank = same; node [shape = box]; edge [style = invis];
 "  v0  " -> "  v1  " -> "  v2  " -> "  v3  "; }
 { rank = same; " x0 ";
-"0x1a";
-"0x5f";
 "0x5c";
 "0x1e";
+"0x1a";
+"0x5f";
 }
 { rank = same; " x1 ";
+"0x5e";
 "0x1b";
 "0x5b";
-"0x5e";
 }
 { rank = same; " x2 ";
-"0x4c";
 "0x5d";
+"0x4c";
 }
 { rank = same; " x3 ";
 "0x4d";
@@ -138,24 +138,24 @@ edge [dir = none];
 "  v1  " -> "0x1e" [style = solid];
 "  v2  " -> "0x5c" [style = solid];
 "  v3  " -> "0x5f" [style = solid];
-"0x1a" -> "0x14";
-"0x1a" -> "0x14" [style = dotted];
-"0x5f" -> "0x5e";
-"0x5f" -> "0x14" [style = dashed];
 "0x5c" -> "0x5b";
 "0x5c" -> "0x4c" [style = dashed];
 "0x1e" -> "0x1b";
 "0x1e" -> "0x14" [style = dashed];
+"0x1a" -> "0x14";
+"0x1a" -> "0x14" [style = dotted];
+"0x5f" -> "0x5e";
+"0x5f" -> "0x14" [style = dashed];
+"0x5e" -> "0x5d";
+"0x5e" -> "0x4d" [style = dashed];
 "0x1b" -> "0x14";
 "0x1b" -> "0x14" [style = dotted];
 "0x5b" -> "0x4c";
 "0x5b" -> "0x14" [style = dashed];
-"0x5e" -> "0x5d";
-"0x5e" -> "0x4d" [style = dashed];
-"0x4c" -> "0x14";
-"0x4c" -> "0x14" [style = dotted];
 "0x5d" -> "0x4d";
 "0x5d" -> "0x14" [style = dashed];
+"0x4c" -> "0x14";
+"0x4c" -> "0x14" [style = dotted];
 "0x4d" -> "0x14";
 "0x4d" -> "0x14" [style = dotted];
 "0x14" [label = "1"];
@@ -242,58 +242,58 @@ edge [dir = none];
 { rank = same; node [shape = box]; edge [style = invis];
 "  s0  " -> "  s1  " -> "  s2  " -> "  c3  "; }
 { rank = same; " a2 ";
-"0x615";
-"0x616";
+"0x195";
+"0x196";
 }
 { rank = same; " b2 ";
-"0x59b";
+"0x11b";
 }
 { rank = same; " a1 ";
-"0x613";
-"0x614";
+"0x193";
+"0x194";
 }
 { rank = same; " b1 ";
-"0x5cd";
+"0x14d";
 }
 { rank = same; " a0 ";
-"0x612";
-"0x611";
+"0x192";
+"0x191";
 }
 { rank = same; " b0 ";
-"0x5ec";
+"0x16c";
 }
 { rank = same; " c0 ";
-"0x610";
+"0x190";
 }
 { rank = same; "CONST NODES";
-{ node [shape = box]; "0x594";
+{ node [shape = box]; "0x114";
 }
 }
-"  s0  " -> "0x611" [style = solid];
-"  s1  " -> "0x613" [style = solid];
-"  s2  " -> "0x615" [style = solid];
-"  c3  " -> "0x616" [style = solid];
-"0x615" -> "0x614";
-"0x615" -> "0x614" [style = dotted];
-"0x616" -> "0x59b";
-"0x616" -> "0x614" [style = dashed];
-"0x59b" -> "0x594";
-"0x59b" -> "0x594" [style = dotted];
-"0x613" -> "0x612";
-"0x613" -> "0x612" [style = dotted];
-"0x614" -> "0x5cd";
-"0x614" -> "0x612" [style = dashed];
-"0x5cd" -> "0x594";
-"0x5cd" -> "0x594" [style = dotted];
-"0x612" -> "0x5ec";
-"0x612" -> "0x610" [style = dashed];
-"0x611" -> "0x610";
-"0x611" -> "0x610" [style = dotted];
-"0x5ec" -> "0x594";
-"0x5ec" -> "0x594" [style = dotted];
-"0x610" -> "0x594";
-"0x610" -> "0x594" [style = dotted];
-"0x594" [label = "1"];
+"  s0  " -> "0x191" [style = solid];
+"  s1  " -> "0x193" [style = solid];
+"  s2  " -> "0x195" [style = solid];
+"  c3  " -> "0x196" [style = solid];
+"0x195" -> "0x194";
+"0x195" -> "0x194" [style = dotted];
+"0x196" -> "0x11b";
+"0x196" -> "0x194" [style = dashed];
+"0x11b" -> "0x114";
+"0x11b" -> "0x114" [style = dotted];
+"0x193" -> "0x192";
+"0x193" -> "0x192" [style = dotted];
+"0x194" -> "0x14d";
+"0x194" -> "0x192" [style = dashed];
+"0x14d" -> "0x114";
+"0x14d" -> "0x114" [style = dotted];
+"0x192" -> "0x16c";
+"0x192" -> "0x190" [style = dashed];
+"0x191" -> "0x190";
+"0x191" -> "0x190" [style = dotted];
+"0x16c" -> "0x114";
+"0x16c" -> "0x114" [style = dotted];
+"0x190" -> "0x114";
+"0x190" -> "0x114" [style = dotted];
+"0x114" [label = "1"];
 }
 z[0]: 4 nodes 2 minterms
 00000000100010 1
@@ -371,12 +371,12 @@ edge [dir = none];
 { rank = same; node [shape = box]; edge [style = invis];
 "  s0  " -> "  s1  " -> "  s2  " -> "  c3  "; }
 { rank = same; " a2+ ";
-"0x57";
 "0x4e";
+"0x57";
 }
 { rank = same; " a2- ";
-"0x4a";
 "0x55";
+"0x4a";
 }
 { rank = same; " b2+ ";
 "0x51";
@@ -387,8 +387,8 @@ edge [dir = none];
 "0x3e";
 }
 { rank = same; " a1- ";
-"0x43";
 "0x35";
+"0x43";
 }
 { rank = same; " b1+ ";
 "0x3f";
@@ -402,8 +402,8 @@ edge [dir = none];
 "0x29";
 }
 { rank = same; " a0- ";
-"0x20";
 "0x2e";
+"0x20";
 }
 { rank = same; " b0+ ";
 "0x2a";
@@ -426,14 +426,14 @@ edge [dir = none];
 "  s1  " -> "0x37" [style = solid];
 "  s2  " -> "0x4e" [style = solid];
 "  c3  " -> "0x57" [style = solid];
-"0x57" -> "0x51";
-"0x57" -> "0x55" [style = dashed];
 "0x4e" -> "0x45";
 "0x4e" -> "0x4a" [style = dashed];
-"0x4a" -> "0x3e";
-"0x4a" -> "0x15" [style = dashed];
+"0x57" -> "0x51";
+"0x57" -> "0x55" [style = dashed];
 "0x55" -> "0x45";
 "0x55" -> "0x15" [style = dashed];
+"0x4a" -> "0x3e";
+"0x4a" -> "0x15" [style = dashed];
 "0x51" -> "0x14";
 "0x51" -> "0x15" [style = dashed];
 "0x45" -> "0x3f";
@@ -442,10 +442,10 @@ edge [dir = none];
 "0x37" -> "0x35" [style = dashed];
 "0x3e" -> "0x3a";
 "0x3e" -> "0x35" [style = dashed];
-"0x43" -> "0x30";
-"0x43" -> "0x15" [style = dashed];
 "0x35" -> "0x29";
 "0x35" -> "0x15" [style = dashed];
+"0x43" -> "0x30";
+"0x43" -> "0x15" [style = dashed];
 "0x3f" -> "0x14";
 "0x3f" -> "0x15" [style = dashed];
 "0x3a" -> "0x14";
@@ -456,10 +456,10 @@ edge [dir = none];
 "0x22" -> "0x20" [style = dashed];
 "0x29" -> "0x25";
 "0x29" -> "0x20" [style = dashed];
-"0x20" -> "0x18";
-"0x20" -> "0x15" [style = dashed];
 "0x2e" -> "0x19";
 "0x2e" -> "0x15" [style = dashed];
+"0x20" -> "0x18";
+"0x20" -> "0x15" [style = dashed];
 "0x2a" -> "0x14";
 "0x2a" -> "0x15" [style = dashed];
 "0x25" -> "0x14";
@@ -494,47 +494,47 @@ edge [dir = none];
 { rank = same; node [shape = box]; edge [style = invis];
 "  lb  " -> "  ub  " -> "  f  " -> "  primes  " -> "  lprime  "; }
 { rank = same; " a ";
-"0x608";
+"0x188";
 }
 { rank = same; " b ";
-"0x607";
-"0x605";
-"0x609";
-"0x604";
+"0x189";
+"0x184";
+"0x187";
+"0x185";
 }
 { rank = same; " c ";
-"0x602";
-"0x5bc";
+"0x13c";
+"0x182";
 }
 { rank = same; " d ";
-"0x5cd";
+"0x14d";
 }
 { rank = same; "CONST NODES";
-{ node [shape = box]; "0x594";
+{ node [shape = box]; "0x114";
 }
 }
-"  lb  " -> "0x609" [style = dotted];
-"  ub  " -> "0x5cd" [style = solid];
-"  f  " -> "0x608" [style = solid];
-"  primes  " -> "0x604" [style = solid];
-"  lprime  " -> "0x604" [style = solid];
-"0x608" -> "0x605";
-"0x608" -> "0x607" [style = dashed];
-"0x607" -> "0x5bc";
-"0x607" -> "0x594" [style = dotted];
-"0x605" -> "0x5cd";
-"0x605" -> "0x602" [style = dotted];
-"0x609" -> "0x602";
-"0x609" -> "0x594" [style = dashed];
-"0x604" -> "0x5cd";
-"0x604" -> "0x594" [style = dotted];
-"0x602" -> "0x594";
-"0x602" -> "0x5cd" [style = dotted];
-"0x5bc" -> "0x5cd";
-"0x5bc" -> "0x594" [style = dashed];
-"0x5cd" -> "0x594";
-"0x5cd" -> "0x594" [style = dotted];
-"0x594" [label = "1"];
+"  lb  " -> "0x189" [style = dotted];
+"  ub  " -> "0x14d" [style = solid];
+"  f  " -> "0x188" [style = solid];
+"  primes  " -> "0x184" [style = solid];
+"  lprime  " -> "0x184" [style = solid];
+"0x188" -> "0x185";
+"0x188" -> "0x187" [style = dashed];
+"0x189" -> "0x182";
+"0x189" -> "0x114" [style = dashed];
+"0x184" -> "0x14d";
+"0x184" -> "0x114" [style = dotted];
+"0x187" -> "0x13c";
+"0x187" -> "0x114" [style = dotted];
+"0x185" -> "0x14d";
+"0x185" -> "0x182" [style = dotted];
+"0x13c" -> "0x14d";
+"0x13c" -> "0x114" [style = dashed];
+"0x182" -> "0x114";
+"0x182" -> "0x14d" [style = dotted];
+"0x14d" -> "0x114";
+"0x14d" -> "0x114" [style = dotted];
+"0x114" [label = "1"];
 }
 primes(1): 3 nodes 1 leaves 4 minterms
 -1-1----------  1
@@ -633,12 +633,12 @@ Number of cache entries: 524288
 Number of cache look-ups: 3847
 Number of cache hits: 876
 Number of cache insertions: 3052
-Number of cache collisions: 5
-Number of cache deletions: 2295
+Number of cache collisions: 7
+Number of cache deletions: 2293
 Cache used slots = 0.17% (expected 0.17%)
 Soft limit for cache size: 76800
 Number of buckets in unique table: 19200
-Used buckets in unique table: 4.21% (expected 4.19%)
+Used buckets in unique table: 4.20% (expected 4.19%)
 Number of BDD and ADD nodes: 2634
 Number of ZDD nodes: 14
 Number of dead BDD and ADD nodes: 2570

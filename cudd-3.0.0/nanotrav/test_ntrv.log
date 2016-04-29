@@ -16,6 +16,7 @@ FAIL: nanotrav/test_ntrv.test 4 s27b
 not ok 5 s27c
 FAIL: nanotrav/test_ntrv.test 5 s27c
 # executing nanotrav/nanotrav -p 1 -autodyn -reordering sifting -trav ./nanotrav/mult32a.blif > ./nanotrav/mult32a.tst
+# comparing ./nanotrav/mult32a.tst to ./nanotrav/mult32a.out
 not ok 6 mult32a
 FAIL: nanotrav/test_ntrv.test 6 mult32a
 # executing nanotrav/nanotrav -p 1 -trav -image part -autodyn -automethod sifting -drop -scc -shortpaths bellman ./nanotrav/s382.blif > ./nanotrav/s382.tst

@@ -1,0 +1,14 @@
+.model DD
+.inputs x y
+.outputs D
+.names 12f3bd
+1
+.names y 12f3bd 12f3bd 12f3c2
+11- 1
+0-0 1
+.names x 12f3bd 12f3c2 12f3d3
+11- 1
+0-1 1
+.names 12f3d3 D
+1 1
+.end

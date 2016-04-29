@@ -69,7 +69,7 @@ Number of cache deletions: 0
 Cache used slots = 50.73% (expected 94.41%)
 Soft limit for cache size: 877568
 Number of buckets in unique table: 219392
-Used buckets in unique table: 90.04% (expected 90.52%)
+Used buckets in unique table: 89.97% (expected 90.52%)
 Number of BDD and ADD nodes: 590157
 Number of ZDD nodes: 0
 Number of dead BDD and ADD nodes: 590115

@@ -125,11 +125,12 @@ main(
     NtrOptions	    *option;	    /* options */
     FILE            *fp1;           /* first network file pointer */
     BnetNetwork     *net1 = NULL;   /* first network */
+    BnetNetwork     *net2 = NULL;   /* second network */
     DdManager	    *dd, *dd_quo;   /* pointer to DD manager & quotient DD manager*/
     int		        exitval;	    /* return value of Cudd_CheckZeroRef */
     int		        ok;		        /* overall return value from main() */
     int		        result;		    /* stores the return value of functions */
-    BnetNode	    *node;		    /* auxiliary pointer to network node */
+    BnetNode	    *node, *node2;  /* auxiliary pointer to network node */
     int		        i;		        /* loop index */
     int		        j;		        /* loop index */
     double	        *signatures;    /* array of signatures */
@@ -146,8 +147,7 @@ main(
 		option->reordering == CUDD_REORDER_LINEAR_CONVERGE ||
 		option->autoMethod == CUDD_REORDER_LINEAR ||
 		option->autoMethod == CUDD_REORDER_LINEAR_CONVERGE;
-    /* Currently traversal requires global BDDs. Override whatever
-    ** was specified for locGlob.
+    /* Currently traversal requires global BDDs. Override whatever ** was specified for locGlob.
     */
     if (option->traverse == TRUE || option->envelope == TRUE ||
 	option->scc == TRUE) {
@@ -158,10 +158,20 @@ main(
     fp1 = open_file(option->file1, "r");
     net1 = Bnet_ReadNetwork(fp1,pr);
     (void) fclose(fp1);
+    
+    fp1 = open_file(option->file1, "r");
+    net2 = Bnet_ReadNetwork(fp1,pr);
+    (void) fclose(fp1);
+    
     if (net1 == NULL) {
 	(void) fprintf(stderr,"Syntax error in %s.\n",option->file1);
 	exit(2);
     }
+    if (net2 == NULL) {
+	(void) fprintf(stderr,"Syntax error in %s.\n",option->file1);
+	exit(2);
+    }
+
     /* ... and optionally echo it to the standard output. */
     if (pr > 2) {
 	Bnet_PrintNetwork(net1);
@@ -179,11 +189,11 @@ main(
 	}*/
 	
     /* ... and optionally echo it to the standard output. */
-	/*if (pr > 2) {
+	if (pr > 2) {
 	    Bnet_PrintNetwork(net2);
 	}
-    }
-    */
+    
+    
 
     /* Initialize manager. We start with 0 variables, because
     ** Ntr_buildDDs will create new variables rather than using
@@ -191,13 +201,13 @@ main(
     */
     dd = startCudd(option,net1->ninputs);
     if (dd == NULL) { exit(2); }
-    dd_quo = startCudd(option,net1->ninputs);
+    dd_quo = startCudd(option,net2->ninputs);
     if (dd_quo == NULL) { exit(2); }
  
     /* Build the BDDs for the nodes of the first network. */
     result = Ntr_buildDDs(net1,dd,option,NULL);
     if (result == 0) { exit(2); }
-    result = Ntr_buildDDs(net1,dd_quo,option,NULL);
+    result = Ntr_buildDDs(net2,dd_quo,option,NULL);
     if (result == 0) { exit(2); }
     
     /*Bnet_PrintNetwork(net1);
@@ -220,12 +230,15 @@ main(
    if (!st_lookup(net1->hash,net1->outputs[1],(void **)&node)) {
     printf("Did not find the node/n");
    }
+   if (!st_lookup(net2->hash,net2->outputs[1],(void **)&node2)) {
+    printf("Did not find the node/n");
+   }
 
 	FILE *fptr;
-	fptr = fopen("hw5.dot","w");
+	fptr = fopen("hw5_quo.dot","w");
 	//const char* const in  [3] = {"a","b","c"};
 	//const char* const out [1] = {"f"};
-	Cudd_DumpDot(dd,1,&node->dd,NULL,NULL,fptr);
+	Cudd_DumpDot(dd_quo,1,&node2->dd,NULL,NULL,fptr);
 
 
 /*---------------------------------------------------------------------------*/
@@ -235,7 +248,8 @@ main(
 	Cudd_PrintDebug( dd, node->dd, node->ninp, 3); 
     
     /* Disable automatic dynamic reordering */
-    Cudd_AutodynDisable(dd);
+    //Cudd_AutodynDisable(dd);
+    //Cudd_AutodynDisable(dd_quo);
 
     printf("Top node: 0x%X \n", node->dd);
     printf("Top node level: %d \n", node->dd->index);
@@ -280,23 +294,37 @@ main(
     DdNode* boundset [] = {0,0,0,0,0};
     DdNode* freeset [] = {0,0,0,0,0};
     int cutLevel = 2;
-    int m = 0;
+    int boundsetSize = 0;
     int n = 0;
+    // Divisor
     Cudd_ForeachNode(dd,node->dd,test_gen,test_node){
         i = test_node->index;
         printf("Node: %X \n", test_node);
         printf("Node index: %d \n", test_node->index);
         printf("i: %d \n", i);
         if(i < cutLevel)
-            boundset[m++] = test_node;
+            boundset[boundsetSize++] = test_node;
         else
             freeset[n++] = test_node;
     }
-
-    printf("m: %d\n", m);
+    // Quotient
+    DdNode* quo_boundset [] = {0,0,0,0,0};
+    DdNode* quo_freeset [] = {0,0,0,0,0};
+    boundsetSize = 0;
+    n = 0;
+    Cudd_ForeachNode(dd_quo,node2->dd,test_gen,test_node){
+        i = test_node->index;
+        printf("i: %d \n", i);
+        if(i < cutLevel)
+            quo_boundset[boundsetSize++] = test_node;
+        else
+            quo_freeset[n++] = test_node;
+    }
+    
+    printf("boundsetSize: %d\n", boundsetSize);
     printf("n: %d\n", n);
     printf("Bound Set:");
-    for(i = 0; i < m; i++)
+    for(i = 0; i < boundsetSize; i++)
         printf(" %X,", boundset[i]);
     printf("\n");
     printf("Free Set:");
@@ -306,7 +334,7 @@ main(
 
     int sigZeroEdges = 0;
     // Determine Sigma Zero edges
-    for(i = 0; i < m; i++){
+    for(i = 0; i < boundsetSize; i++){
         test_node = boundset[i];
         printf("\n\n\n T node value: %X\n",Cudd_T(test_node));
         if((Cudd_T(test_node) == Cudd_Complement(dd->one)))// && Cudd_IsComplement(test_node->type.kids.T))// || (Cudd_T(test_node) == dd->zero)) // == 159383551);    
@@ -324,6 +352,87 @@ main(
      
     printf("one node compliment %X \n", Cudd_Complement(dd->one));
 
+
+    /* Create Divisor BDD */
+    
+    for(i = 0; i < boundsetSize; i++){
+       // We only care about the bound set nodes for the divisor
+       printf("Entering for loop. i = %d\n", i);
+       test_node = Cudd_T(boundset[i]);
+       if(test_node != Cudd_Complement(dd->one)){
+           for(j = 0; j < boundsetSize; j++){
+                if(test_node == freeset[j]){
+                    printf("Node is in freeset. j = %d\n", j);
+                    boundset[i]->type.kids.T = dd->one; 
+                    printf("Node was redirected to one node.");
+                    break;
+                } 
+           }
+       }
+
+       test_node = Cudd_E(boundset[i]);
+       if(test_node != Cudd_Complement(dd->one)){
+           for(j = 0; j < boundsetSize; j++){
+                if(test_node == freeset[j])
+                    {boundset[i]->type.kids.E = dd->one; break;} 
+           }
+       }
+    }
+
+
+    Cudd_ReduceHeap(dd,CUDD_REORDER_SAME,1);
+
+    char *inames1[3] = {"x", "y", "z"};
+    char *onames1[1] = {"D"};
+    
+    fptr = fopen("hw5_divisor.blif","w");
+    Cudd_DumpBlif(dd,1,&node->dd,inames1,onames1,NULL,fptr,0);
+    fclose(fptr);
+    
+    fptr = fopen("hw5_divisor.dot","w");
+    Cudd_DumpDot(dd,1,&node->dd,inames1,onames1,fptr);
+    fclose(fptr);
+   
+    /* Build the tree for the Quotient */
+    for(i = 0; i < boundsetSize; i++){
+       // We only care about the bound set nodes for the divisor
+       printf("Entering for QUOTIENT loop. i = %d\n", i);
+       test_node = Cudd_T(quo_boundset[i]);
+       if(test_node == Cudd_Complement(dd_quo->one)){
+            quo_boundset[i]->type.kids.T = quo_boundset[i]->type.kids.E; }
+    
+       printf("Quotient T child fine.\n");
+       test_node = Cudd_E(quo_boundset[i]);
+       if(test_node == Cudd_Complement(dd_quo->one)){
+            quo_boundset[i]->type.kids.E = quo_boundset[i]->type.kids.T;
+       }
+       printf("Quotient E child fine.\n");
+    }
+
+    // Remove redundant nodes and isomorphic subgraphs
+    Cudd_ReduceHeap(dd_quo,CUDD_REORDER_NONE,1);
+
+    printf("Printing Quotient BLIF\n");
+
+    char *inames2[3] = {"x", "y", "z"};
+    char *onames2[1] = {"G"};
+    
+    fptr = fopen("hw5_quotient.blif","w");
+    Cudd_DumpBlif(dd_quo,1,&node2->dd,inames2,onames2,NULL,fptr,0);
+    fclose(fptr);
+
+    printf("Printing Quotient DOT"); 
+    
+    fptr = fopen("hw5_quotient.dot","w");
+    Cudd_DumpDot(dd_quo,1,&node2->dd,inames2,onames2,fptr);
+    fclose(fptr);
+    
+    
+    printf("End of main\n\n\n");
+    
+    
+    
+    
     exit(0);
 
 } /* end of main */
