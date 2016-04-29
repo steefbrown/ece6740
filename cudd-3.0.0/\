@@ -126,15 +126,11 @@ main(
     FILE            *fp1;           /* first network file pointer */
     BnetNetwork     *net1 = NULL;   /* first network */
     BnetNetwork     *net2 = NULL;   /* second network */
-    BnetNetwork     *net_ash = NULL;    /* first network */
-    BnetNetwork     *net_curt = NULL;   /* second network */
-    DdManager	    *dd, *dd_quo;       /* pointer to DD manager & quotient DD manager*/
-    DdManager       *dd_ash, *dd_curt;
+    DdManager	    *dd, *dd_quo;   /* pointer to DD manager & quotient DD manager*/
     int		        exitval;	    /* return value of Cudd_CheckZeroRef */
     int		        ok;		        /* overall return value from main() */
     int		        result;		    /* stores the return value of functions */
     BnetNode	    *node, *node2;  /* auxiliary pointer to network node */
-    BnetNode	    *node_ash, *node_curt;  /* auxiliary pointer to network node */
     int		        i;		        /* loop index */
     int		        j;		        /* loop index */
     double	        *signatures;    /* array of signatures */
@@ -190,37 +186,6 @@ main(
 	    Bnet_PrintNetwork(net2);
 	}
     
-    /* Read the first network again for Ash-Curt decomp... */ 
-    fp1 = open_file(option->file1, "r");
-    net_ash = Bnet_ReadNetwork(fp1,pr);
-    (void) fclose(fp1);
-    
-    if (net_ash == NULL) {
-	(void) fprintf(stderr,"Syntax error in %s.\n",option->file1);
-	exit(2);
-    }
-	
-    /* ... and optionally echo it to the standard output. */
-	if (pr > 2) {
-	    Bnet_PrintNetwork(net_ash);
-	}
-    
-    /* Read the first network again for Ash-Curt decomp... */ 
-    fp1 = open_file(option->file1, "r");
-    net_curt = Bnet_ReadNetwork(fp1,pr);
-    (void) fclose(fp1);
-    
-    if (net_curt == NULL) {
-	(void) fprintf(stderr,"Syntax error in %s.\n",option->file1);
-	exit(2);
-    }
-	
-    /* ... and optionally echo it to the standard output. */
-	if (pr > 2) {
-	    Bnet_PrintNetwork(net_curt);
-	}
-    
-    
     /* Initialize manager. We start with 0 variables, because
     ** Ntr_buildDDs will create new variables rather than using
     ** whatever already exists.
@@ -238,21 +203,6 @@ main(
         if (result == 0) { exit(2); }
     // Quotient
     result = Ntr_buildDDs(net2,dd_quo,option,NULL);
-        if (result == 0) { exit(2); }
-    
-    // DdManager for divisor
-    dd_ash = startCudd(option,net_ash->ninputs);
-        if (dd == NULL) { exit(2); }
-    // DdManager for quotient
-    dd_curt = startCudd(option,net_curt->ninputs);
-        if (dd_quo == NULL) { exit(2); }
- 
-    /* Build the BDDs for the nodes of the first network. */
-    // Divisor
-    result = Ntr_buildDDs(net_ash,dd_ash,option,NULL);
-        if (result == 0) { exit(2); }
-    // Quotient
-    result = Ntr_buildDDs(net_curt,dd_curt,option,NULL);
         if (result == 0) { exit(2); }
     
     /*Bnet_PrintNetwork(net1);
@@ -281,31 +231,23 @@ main(
     if (!st_lookup(net2->hash,net2->outputs[1],(void **)&node2)) {
         printf("Did not find the node/n");
     }
-    // Ash 
-    if (!st_lookup(net_ash->hash,net_ash->outputs[1],(void **)&node_ash)) {
-        printf("Did not find the node/n");
-    }
-    // Curt
-    if (!st_lookup(net_curt->hash,net_curt->outputs[1],(void **)&node_curt)) {
-        printf("Did not find the node/n");
-    }
 
     // Set up arrays to output variable names
-    //char *inames1[node->ninp];
-    //char *onames1[1] = {node->name};
+    char *inames1[node->ninp];
+    char *onames1[1] = {node->name};
 
     printf("Number of inputs: %d\n\n", node->ninp);
-/*    for(i = 0; i < node->ninp; i++){
+    for(i = 0; i < node->ninp; i++){
         printf("%d input: %s\n", i, node->inputs[i]);
         inames1[i] = node->inputs[i];
     }
-*/    
+    
     printf("\n\n**************GENERATING NETWORK BDD***************\n\n");
 
     // Create Dot file for the BDD to verify
 	FILE *fptr;
 	fptr = fopen("hw5_quo.dot","w");
-	Cudd_DumpDot(dd_quo,1,&node2->dd,node2->inputs,&node2->name,fptr);
+	Cudd_DumpDot(dd_quo,1,&node2->dd,inames1,onames1,fptr);
     fclose(fptr);
 
 /*---------------------------------------------------------------------------*/
@@ -486,7 +428,7 @@ main(
        printf("Entering for loop. i = %d\n", i);
        test_node = Cudd_T(boundset[i]);
        if(test_node != Cudd_Complement(dd->one)){
-           for(j = 0; j < n; j++){
+           for(j = 0; j < boundsetSize; j++){
                 if(test_node == freeset[j]){
                     printf("Node is in freeset. j = %d\n", j);
                     boundset[i]->type.kids.T = dd->one; 
@@ -498,7 +440,7 @@ main(
 
        test_node = Cudd_E(boundset[i]);
        if(test_node != Cudd_Complement(dd->one)){
-           for(j = 0; j < n; j++){
+           for(j = 0; j < boundsetSize; j++){
                 if(test_node == freeset[j])
                     {boundset[i]->type.kids.E = dd->one; break;} 
            }
@@ -510,11 +452,11 @@ main(
 
     
     fptr = fopen("hw5_divisor.blif","w");
-    Cudd_DumpBlif(dd,1,&node->dd,node->inputs,&node->name,NULL,fptr,0);
+    Cudd_DumpBlif(dd,1,&node->dd,inames1,onames1,NULL,fptr,0);
     fclose(fptr);
     
     fptr = fopen("hw5_divisor.dot","w");
-    Cudd_DumpDot(dd,1,&node->dd,node->inputs,&node->name,fptr);
+    Cudd_DumpDot(dd,1,&node->dd,inames1,onames1,fptr);
     fclose(fptr);
    
     printf("\n\n**************BUILDING QUOTIENT BDD***************\n\n");
@@ -541,8 +483,8 @@ main(
 
     printf("Printing Quotient BLIF\n");
 
-    //char *inames2[3] = {"x", "y", "z"};
-    //char *onames2[1] = {"G"};
+    char *inames2[3] = {"x", "y", "z"};
+    char *onames2[1] = {"G"};
     
     fptr = fopen("hw5_quotient.blif","w");
     Cudd_DumpBlif(dd_quo,1,&node2->dd,node2->inputs,&node2->name,NULL,fptr,0);
@@ -559,123 +501,11 @@ main(
     /****************************************************************
      * ASHTENHURST-CURTIS DECOMPOSITION
      ***************************************************************/ 
-    printf("\n\nStarting Functional Decomposition Method\n\n");
+/*    printf("\n\nStarting Functional Decomposition Method\n\n");
     
-    /* Borrowning the same cut level and boundset/freeset, 
-     * this builds the Ashenhurst-Curtis decomposed circuit.
-     */
-
-    DdNode** ash_boundset = calloc(nodeCount, sizeof(DdNode));// = {0,0,0,0,0};
-    DdNode** ash_freeset  = calloc(nodeCount, sizeof(DdNode));// = {0,0,0,0,0};
-    DdNode** curt_boundset = calloc(nodeCount, sizeof(DdNode));// = {0,0,0,0,0};
-    DdNode** curt_freeset  = calloc(nodeCount, sizeof(DdNode));// = {0,0,0,0,0};
-    
-    boundsetSize = 0;
-    n = 0;
-
-    Cudd_ForeachNode(dd_ash,node_ash->dd,test_gen,test_node){
-        i = test_node->index;
-        printf("Node: %X \n", test_node);
-        printf("Node index: %d \n", test_node->index);
-        printf("i: %d \n\n", i);
-        if(i < cutLevel)
-            ash_boundset[boundsetSize++] = test_node;
-        else
-            ash_freeset[n++] = test_node;
-    }//end Cudd_ForeachNode
-    
-    boundsetSize = 0;
-    n = 0;
-
-    Cudd_ForeachNode(dd_curt,node_curt->dd,test_gen,test_node){
-        i = test_node->index;
-        printf("Node: %X \n", test_node);
-        printf("Node index: %d \n", test_node->index);
-        printf("i: %d \n\n", i);
-        if(i < cutLevel)
-            curt_boundset[boundsetSize++] = test_node;
-        else
-            curt_freeset[n++] = test_node;
-    }//end Cudd_ForeachNode
-
-    DdNode** cutset  = calloc(n, sizeof(DdNode));// = {0,0,0,0,0};
-    int cvar = 0;
-    int k = 0;
-    int flag = 0;
-
-    printf("boundsetSize = %d\n", boundsetSize);
-    printf("Freeset Size = %d\n",n);
-    printf("One node is: %X\n", dd_ash->one);
-    printf("Freeset[0] is: %X\n", freeset[0]);
-    printf("Freeset[1] is: %X\n", freeset[1]);
-
-    // count the number of cutset nodes
-    for(i = 0; i < boundsetSize; i++){
-       // We only care about the bound set nodes for the divisor
-       test_node = Cudd_T(curt_boundset[i]);
-       printf("Entering for boundset loop. i = %d, node = %X\n", i, test_node);
-       for(j = 0; j < n; j++){
-       printf("Entering next loop. j = %d, node = %X\n", j, test_node);
-            if(test_node == curt_freeset[j]){
-                printf("Node is in freeset. j = %d, node = %X\n", j, test_node);
-                flag = 0;
-                // check not in cutset already
-                for(k = 0; k < n; k++){
-                    if(test_node == cutset[k])
-                        {flag = 1; break;}
-                }
-                // If not in cutset, but in freeset, add to cutset
-                if(!flag){
-                    cutset[cvar++] = test_node; 
-                    printf("Node was added to cutset.\n");
-                }
-                break;
-            } 
-       }
-       
-       test_node = Cudd_E(curt_boundset[i]);
-       printf("Already in boundset loop. i = %d, node = %X\n", i, test_node);
-       for(j = 0; j < n; j++){
-            if(test_node == curt_freeset[j]){
-                printf("Node is in freeset. j = %d, node = %X\n", j, test_node);
-                flag = 0;
-                // check not in cutset already
-                for(k = 0; k < n; k++){
-                    if(test_node == cutset[k])
-                        {flag = 1; break;}
-                }
-                // If not in cutset, but in freeset, add to cutset
-                if(!flag){
-                    cutset[cvar++] = test_node; 
-                    printf("Node was added to cutset.\n");
-                }
-                break;
-            } 
-       }
-    }
-
-    printf("cvar = %d\n\n",cvar);
-
-    for(i = 0; i < cvar; i++){
-        printf("Cutset node[%d] = %X\n", i,cutset[i]);
-    }
-
-    unsigned int temp_cvar = (unsigned int)cvar;
-    int bits = 0;
-    // Enumerate cutset nodes
-    // ceiling(log2(cvar))
-    for(i = 0; i < 32; i++){
-        printf("temp_cvar = %X\n", temp_cvar);
-        if(temp_cvar & 0x1)
-        { printf("i = %d\n",i); bits = i ? i : 1;}
-        temp_cvar = temp_cvar >> 1;    
-    }
-
-    printf("number of bits = %d\n\n",bits);
-
-   
     
 
+*/
     printf("End of main\n\n\n");
     
  
@@ -683,10 +513,6 @@ main(
     free(freeset); 
     free(quo_boundset);
     free(quo_freeset); 
-    free(ash_boundset);
-    free(ash_freeset); 
-    free(curt_boundset);
-    free(curt_freeset); 
 
     exit(0);
 

@@ -13,10 +13,10 @@ FAIL: nanotrav/test_ntrv.test 3 s27
 not ok 4 s27b
 FAIL: nanotrav/test_ntrv.test 4 s27b
 # executing nanotrav/nanotrav -p 1 -trav -image depend -depend ./nanotrav/s27c.blif > ./nanotrav/s27c.tst
+# comparing ./nanotrav/s27c.tst to ./nanotrav/s27c.out
 not ok 5 s27c
 FAIL: nanotrav/test_ntrv.test 5 s27c
 # executing nanotrav/nanotrav -p 1 -autodyn -reordering sifting -trav ./nanotrav/mult32a.blif > ./nanotrav/mult32a.tst
-# comparing ./nanotrav/mult32a.tst to ./nanotrav/mult32a.out
 not ok 6 mult32a
 FAIL: nanotrav/test_ntrv.test 6 mult32a
 # executing nanotrav/nanotrav -p 1 -trav -image part -autodyn -automethod sifting -drop -scc -shortpaths bellman ./nanotrav/s382.blif > ./nanotrav/s382.tst
@@ -26,6 +26,7 @@ FAIL: nanotrav/test_ntrv.test 7 s382
 not ok 8 s641
 FAIL: nanotrav/test_ntrv.test 8 s641
 # executing nanotrav/nanotrav -p 1 -reordering genetic -drop -closest ./nanotrav/closest.blif > ./nanotrav/closest.tst
+# comparing ./nanotrav/closest.tst to ./nanotrav/closest.out
 not ok 9 closest
 FAIL: nanotrav/test_ntrv.test 9 closest
 # executing nanotrav/nanotrav -p 1 -ordering dfs -reordering cogroup -drop -char2vect -cofest ./nanotrav/adj49.blif > ./nanotrav/adj49.tst
@@ -38,6 +39,7 @@ FAIL: nanotrav/test_ntrv.test 11 ham01
 not ok 12 miniFirst
 FAIL: nanotrav/test_ntrv.test 12 miniFirst
 # executing nanotrav/nanotrav -p 1 -envelope ./nanotrav/rcn25.blif > ./nanotrav/rcn25.tst
+# comparing ./nanotrav/rcn25.tst to ./nanotrav/rcn25.out
 not ok 13 rcn25
 FAIL: nanotrav/test_ntrv.test 13 rcn25
 # 13 failed sub-tests out of 13

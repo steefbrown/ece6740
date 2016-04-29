@@ -1,20 +1,20 @@
 .model DD
 .inputs x y z
-.outputs G
-.names 12f850
+.outputs g
+.names e556f
 1
-.names z 12f850 12f850 12f856
+.names z e556f e556f e5575
 11- 1
 0-0 1
-.names y 12f850 12f856 12f865
+.names y e556f e5575 e5584
 11- 1
 0-1 1
-.names y 12f856 12f856 12f85b
+.names y e5575 e5575 e557a
 11- 1
 0-1 1
-.names x 12f865 12f85b 12f866
+.names x e5584 e557a e5585
 11- 1
 0-1 1
-.names 12f866 G
+.names e5585 g
 1 1
 .end

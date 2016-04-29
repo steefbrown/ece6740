@@ -1,14 +1,14 @@
 .model DD
 .inputs x y
-.outputs D
-.names 12f3bd
+.outputs g
+.names e50dc
 1
-.names y 12f3bd 12f3bd 12f3c2
+.names y e50dc e50dc e50e1
 11- 1
 0-0 1
-.names x 12f3bd 12f3c2 12f3d3
+.names x e50dc e50e1 e50f2
 11- 1
 0-1 1
-.names 12f3d3 D
+.names e50f2 g
 1 1
 .end

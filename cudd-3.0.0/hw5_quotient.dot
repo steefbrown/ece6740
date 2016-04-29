@@ -8,29 +8,29 @@ edge [dir = none];
 " x " -> " y " -> " z " -> "CONST NODES"; 
 }
 { rank = same; node [shape = box]; edge [style = invis];
-"  G  "; }
+"  g  "; }
 { rank = same; " x ";
-"0x66";
+"0x585";
 }
 { rank = same; " y ";
-"0x5b";
-"0x65";
+"0x57a";
+"0x584";
 }
 { rank = same; " z ";
-"0x56";
+"0x575";
 }
 { rank = same; "CONST NODES";
-{ node [shape = box]; "0x50";
+{ node [shape = box]; "0x56f";
 }
 }
-"  G  " -> "0x66" [style = solid];
-"0x66" -> "0x65";
-"0x66" -> "0x5b" [style = dashed];
-"0x5b" -> "0x56";
-"0x5b" -> "0x56" [style = dashed];
-"0x65" -> "0x50";
-"0x65" -> "0x56" [style = dashed];
-"0x56" -> "0x50";
-"0x56" -> "0x50" [style = dotted];
-"0x50" [label = "1"];
+"  g  " -> "0x585" [style = solid];
+"0x585" -> "0x584";
+"0x585" -> "0x57a" [style = dashed];
+"0x57a" -> "0x575";
+"0x57a" -> "0x575" [style = dashed];
+"0x584" -> "0x56f";
+"0x584" -> "0x575" [style = dashed];
+"0x575" -> "0x56f";
+"0x575" -> "0x56f" [style = dotted];
+"0x56f" [label = "1"];
 }
