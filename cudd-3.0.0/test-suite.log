@@ -53,10 +53,10 @@ FAIL: nanotrav/test_ntrv.test 10 adj49
 not ok 11 ham01
 FAIL: nanotrav/test_ntrv.test 11 ham01
 # executing nanotrav/nanotrav -p 1 -second ./nanotrav/miniSecond.blif ./nanotrav/miniFirst.blif > ./nanotrav/miniFirst.tst
+# comparing ./nanotrav/miniFirst.tst to ./nanotrav/miniFirst.out
 not ok 12 miniFirst
 FAIL: nanotrav/test_ntrv.test 12 miniFirst
 # executing nanotrav/nanotrav -p 1 -envelope ./nanotrav/rcn25.blif > ./nanotrav/rcn25.tst
-# comparing ./nanotrav/rcn25.tst to ./nanotrav/rcn25.out
 not ok 13 rcn25
 FAIL: nanotrav/test_ntrv.test 13 rcn25
 # 13 failed sub-tests out of 13

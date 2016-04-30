@@ -16,5 +16,5 @@ Number of inputs: 1
 Printing the BDD for f: ptr to the nodes, T & E children
 
 : 2 nodes 1 leaves 1 minterms
-ID =  0xbe4bf	index = 27	T = 1        	E = !1        
+ID =  0x4ddbd	index = 25	T = 1        	E = !1        
 

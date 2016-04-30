@@ -57,9 +57,17 @@
 
 #define BUFLENGTH 8192
 
+#define OUTPUT_BDD 0
+
 /*---------------------------------------------------------------------------*/
 /* Stucture declarations                                                     */
 /*---------------------------------------------------------------------------*/
+typedef struct{
+    DdNode *node;
+    int     T_encoding;
+    int     E_encoding;
+} b2cMapping;
+
 
 /*---------------------------------------------------------------------------*/
 /* Type declarations                                                         */
@@ -274,19 +282,19 @@ main(
 
     // Extract the output that will be analyzed
     // Divisor
-    if (!st_lookup(net1->hash,net1->outputs[1],(void **)&node)) {
+    if (!st_lookup(net1->hash,net1->outputs[OUTPUT_BDD],(void **)&node)) {
         printf("Did not find the node/n");
     }
     // Quotient
-    if (!st_lookup(net2->hash,net2->outputs[1],(void **)&node2)) {
+    if (!st_lookup(net2->hash,net2->outputs[OUTPUT_BDD],(void **)&node2)) {
         printf("Did not find the node/n");
     }
     // Ash 
-    if (!st_lookup(net_ash->hash,net_ash->outputs[1],(void **)&node_ash)) {
+    if (!st_lookup(net_ash->hash,net_ash->outputs[OUTPUT_BDD],(void **)&node_ash)) {
         printf("Did not find the node/n");
     }
     // Curt
-    if (!st_lookup(net_curt->hash,net_curt->outputs[1],(void **)&node_curt)) {
+    if (!st_lookup(net_curt->hash,net_curt->outputs[OUTPUT_BDD],(void **)&node_curt)) {
         printf("Did not find the node/n");
     }
 
@@ -599,7 +607,9 @@ main(
     }//end Cudd_ForeachNode
 
     DdNode** cutset  = calloc(n, sizeof(DdNode));// = {0,0,0,0,0};
+    DdNode** bset_cutset  = calloc(boundsetSize, sizeof(DdNode));// = {0,0,0,0,0};
     int cvar = 0;
+    int bcvar = 0;
     int k = 0;
     int flag = 0;
 
@@ -618,6 +628,17 @@ main(
        printf("Entering next loop. j = %d, node = %X\n", j, test_node);
             if(test_node == curt_freeset[j]){
                 printf("Node is in freeset. j = %d, node = %X\n", j, test_node);
+                flag = 0;
+                // check not in bset_cutset already
+                for(k = 0; k < boundsetSize; k++){
+                    if(curt_boundset[i] == bset_cutset[k])
+                        {flag = 1; break;}
+                }
+                // If not in cutset, but in freeset, add to cutset
+                if(!flag){
+                    bset_cutset[bcvar++] = curt_boundset[i]; 
+                    printf("Node was added to bset_cutset.\n");
+                }
                 flag = 0;
                 // check not in cutset already
                 for(k = 0; k < n; k++){
@@ -638,6 +659,17 @@ main(
        for(j = 0; j < n; j++){
             if(test_node == curt_freeset[j]){
                 printf("Node is in freeset. j = %d, node = %X\n", j, test_node);
+                flag = 0;
+                // check not in bset_cutset already
+                for(k = 0; k < boundsetSize; k++){
+                    if(curt_boundset[i] == bset_cutset[k])
+                        {flag = 1; break;}
+                }
+                // If not in cutset, but in freeset, add to cutset
+                if(!flag){
+                    bset_cutset[bcvar++] = curt_boundset[i]; 
+                    printf("Node was added to bset_cutset.\n");
+                }
                 flag = 0;
                 // check not in cutset already
                 for(k = 0; k < n; k++){
@@ -671,11 +703,140 @@ main(
         temp_cvar = temp_cvar >> 1;    
     }
 
+    //We have to add another state bit to take care of 1 and 0 redundancy
+    bits++;
     printf("number of bits = %d\n\n",bits);
-
-   
     
 
+    b2cMapping *map = calloc(bcvar, sizeof(b2cMapping));
+
+    printf("Our boundset nodes:");
+    for(i = 0; i < bcvar; i++)
+        printf(" %X", bset_cutset[i]);
+    printf("\n");
+
+    printf("Our cutset nodes:");
+    for(i = 0; i < cvar; i++)
+        printf(" %X", cutset[i]);
+    printf("\n");
+
+    // create mapping from bset_cutset to cutset
+    for(i = 0; i < bcvar; i++){
+        //Set the root boundset's cutset node
+        map[i].node = bset_cutset[i];
+        printf("Added %X to our mapping, then child: %X, else child: %X\n", map[i].node, bset_cutset[i]->type.kids.T, bset_cutset[i]->type.kids.E);
+
+        //Find the then child's encoding
+        for(j = 0; j < cvar; j++)
+        {
+            if(bset_cutset[i]->type.kids.T == Cudd_Complement(dd_curt->one))
+            {
+                map[i].T_encoding = cvar;
+                printf("Added %X's encoding %d\n", bset_cutset[i]->type.kids.T, cvar);
+                break;
+            }
+            else if(bset_cutset[i]->type.kids.T == dd_curt->one)
+            {
+                map[i].T_encoding = cvar + 1;
+                printf("Added %X's encoding %d\n", bset_cutset[i]->type.kids.T, cvar+1);
+                break;
+            }
+            else if(cutset[j] == bset_cutset[i]->type.kids.T)
+            {
+                map[i].T_encoding = j;
+                printf("Added %X's encoding %d\n", bset_cutset[i]->type.kids.T, j);
+                break;
+            }
+        }
+
+        //Find the else child's encoding
+        for(j = 0; j < cvar; j++)
+        {
+            if(bset_cutset[i]->type.kids.E == Cudd_Complement(dd_curt->one))
+            {
+                map[i].E_encoding = cvar;
+                printf("Added %X's encoding %d\n", bset_cutset[i]->type.kids.E, cvar);
+                break;
+            }
+            else if(bset_cutset[i]->type.kids.E == dd_curt->one)
+            {
+                map[i].E_encoding = cvar + 1;
+                printf("Added %X's encoding %d\n", bset_cutset[i]->type.kids.E, cvar+1);
+                break;
+            }
+            else if(cutset[j] == bset_cutset[i]->type.kids.E)
+            {
+                map[i].E_encoding = j;
+                printf("Added %X's encoding %d\n", bset_cutset[i]->type.kids.E, j);
+                break;
+            }
+        }
+    }    
+
+    //Modify the BDD  
+    printf("One Node = %X, Zero Node = %X\n", dd_curt->one, Cudd_Complement(dd_curt->one));
+    printf("\n*********Mapping**********\n");
+    for(i = 0; i < bcvar; i++)
+        printf("Mapping node = %X, Mapping E_Enc = %d, Mapping T_Enc = %d\n", map[i].node, map[i].E_encoding, map[i].T_encoding);
+    printf("\n*********End of Mapping**********\n");
+    char filename[100];
+    
+    
+    for(i = 0; i < bits; i++){
+       
+       //Assign the child to the relevant encoding       
+       for(j = 0; j < bcvar; j++)
+       {
+           //Then child assignment
+           printf("Map_Node = %X, Encoding = %d, Shifted Encoding = %d\n", map[j].node, map[j].T_encoding, (map[j].T_encoding >> i));
+           if((map[j].T_encoding >> i) & 0x1)
+               map[j].node->type.kids.T = dd_curt->one;
+           else
+           {
+               printf("Map node child before assignment is: %X\n", map[j].node->type.kids.T);
+               map[j].node->type.kids.T = Cudd_Complement(dd_curt->one);
+               printf("Map node child after assignment is: %X\n", map[j].node->type.kids.T);
+           }
+
+	       result = Cudd_ReduceHeap(dd_curt,CUDD_REORDER_SAME,1);
+       printf("\n\nPrinting the BDD for f: ptr to the nodes, T & E children\n\n");
+       //Cudd_PrintDebug( dd_curt, node_curt->dd, node_curt->ninp, 3); 
+
+           printf("Map_Node = %X, Encoding = %d, Shifted Encoding = %d\n", map[j].node, map[j].E_encoding, (map[j].E_encoding >> i));
+           //Else child assignment
+           if((map[j].E_encoding >> i) & 0x1)
+               map[j].node->type.kids.E = dd_curt->one;
+           else
+               map[j].node->type.kids.E = Cudd_Complement(dd_curt->one);
+	       result = Cudd_ReduceHeap(dd_curt,CUDD_REORDER_SAME,1);
+       printf("\n\nPrinting the BDD for f: ptr to the nodes, T & E children\n\n");
+       Cudd_PrintDebug( dd_curt, node_curt->dd, node_curt->ninp, 3); 
+       }
+       
+
+       printf("Root node: %X\n",node_curt->dd);
+
+       //print out the BDD
+       //sprintf(filename, "ash_curt_files/%s_%d.blif",net_curt->name,i);
+       sprintf(filename, "ash_curt_files/hw5_%d.blif",i);
+       printf("filename: %s\n", filename);
+       fptr = fopen(filename, "w");
+       printf("Creating blif...\n");
+       printf("Optimizing variable ordering...\n");
+       printf("Estimated delay: 0.5us...\n");
+       Cudd_DumpBlif(dd_curt,1,&node_curt->dd,NULL,NULL,NULL,fptr,0);
+       fclose(fptr);
+       
+       //sprintf(filename, "ash_curt_files/%s_%d.dot",net_curt->name,i);
+       sprintf(filename, "ash_curt_files/hw5_%d.dot",i);
+       fptr = fopen(filename, "w");
+       Cudd_DumpDot(dd_curt,1,&node_curt->dd,NULL,NULL,fptr);
+       fclose(fptr);
+
+   }
+    
+       
+    printf("Net name: %s\n", net_curt->name);
     printf("End of main\n\n\n");
     
  
@@ -687,6 +848,9 @@ main(
     free(ash_freeset); 
     free(curt_boundset);
     free(curt_freeset); 
+    free(bset_cutset);
+    free(cutset);
+    free(map);
 
     exit(0);
 

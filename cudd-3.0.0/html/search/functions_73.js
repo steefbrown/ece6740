@@ -33,7 +33,7 @@ var searchData=
   ['st_5fstrhash',['st_strhash',['../st_8c.html#ae04fa098acd6e45c99d7a5fca22757c4',1,'st_strhash(void const *string, int modulus):&#160;st.c'],['../st_8h.html#a304db8f8729fd2f46cd2361f25befe34',1,'st_strhash(void const *, int):&#160;st.c']]],
   ['st_5fzdd_5fcount_5fdbl_5ffree',['st_zdd_count_dbl_free',['../cuddZddCount_8c.html#a7944f1ae14a901f7d534796c450af26b',1,'cuddZddCount.c']]],
   ['st_5fzdd_5fcountfree',['st_zdd_countfree',['../cuddZddCount_8c.html#af5cd96738f14ef79b733d52de834ea00',1,'cuddZddCount.c']]],
-  ['startcudd',['startCudd',['../main__nanotrav_8c.html#af20891a5ccd4ba15456d639554170e57',1,'main_nanotrav.c']]],
+  ['startcudd',['startCudd',['../main_8c.html#af20891a5ccd4ba15456d639554170e57',1,'main.c']]],
   ['stfree',['stFree',['../chkMterm_8c.html#a93beb44584a5742550003990aae5a34d',1,'chkMterm.c']]],
   ['stopping_5fcriterion',['stopping_criterion',['../cuddAnneal_8c.html#a5f2b499b6706d3e880ad375ab7eacd03',1,'cuddAnneal.c']]],
   ['storenodes',['StoreNodes',['../cuddSubsetHB_8c.html#a4b5b177b1b840fc9ca33c7e1899d4960',1,'cuddSubsetHB.c']]],

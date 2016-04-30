@@ -14,7 +14,7 @@ var searchData=
   ['fpit',['fpit',['../structflowStatsStruct.html#ad7dd3eb68dae3a0ce84e4e8f6e4d785e',1,'flowStatsStruct']]],
   ['free',['FREE',['../util_8h.html#aa279a8302d25fa9dfeb3e00161aee784',1,'util.h']]],
   ['freematrix',['freeMatrix',['../cuddExact_8c.html#ae61a29ea2e8e94b45114dbb698e14ac7',1,'cuddExact.c']]],
-  ['freeoption',['freeOption',['../main__nanotrav_8c.html#a31548053fede01a8184e07fef7aea422',1,'main_nanotrav.c']]],
+  ['freeoption',['freeOption',['../main_8c.html#a31548053fede01a8184e07fef7aea422',1,'main.c']]],
   ['freepathpair',['freePathPair',['../cuddSat_8c.html#a93e5bbe63d2e2598f123244b9789a731',1,'cuddSat.c']]],
   ['from',['from',['../structNtrOptions.html#a511322792f7f7bd993b4eb9d55c2e2cf',1,'NtrOptions']]],
   ['functionref',['functionRef',['../structNodeData.html#a2c61e48351849db296065241e6f98969',1,'NodeData']]]

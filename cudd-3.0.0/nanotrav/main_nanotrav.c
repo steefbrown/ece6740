@@ -1,18 +1,14 @@
-/**CFile***********************************************************************
+/**
+  @file
 
-  FileName    [main.c]
+  @ingroup nanotrav
 
-  PackageName [ntr]
+  @brief Main program for the nanotrav program.
 
-  Synopsis    [Main program for the nanotrav program.]
+  @author Fabio Somenzi
 
-  Description []
-
-  SeeAlso     []
-
-  Author      [Fabio Somenzi/Priyank Kalla]
-
-  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado
+  @copyright@parblock
+  Copyright (c) 1995-2015, Regents of the University of Colorado
 
   All rights reserved.
 
@@ -42,18 +38,19 @@
   CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
   ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-  POSSIBILITY OF SUCH DAMAGE.]
+  POSSIBILITY OF SUCH DAMAGE.
+  @endparblock
 
-******************************************************************************/
+*/
 
-#include "ntr.h"
 #include "cuddInt.h"
+#include "ntr.h"
 
 /*---------------------------------------------------------------------------*/
 /* Constant declarations                                                     */
 /*---------------------------------------------------------------------------*/
 
-#define NTR_VERSION "Nanotrav Version #0.12, Release date 2003/12/31"
+#define NTR_VERSION "Nanotrav Version #0.13, Release date 2015/7/15"
 
 #define BUFLENGTH 8192
 
@@ -69,10 +66,6 @@
 /* Variable declarations                                                     */
 /*---------------------------------------------------------------------------*/
 
-#ifndef lint
-static char rcsid[] UTIL_UNUSED = "$Id: main.c,v 1.38 2004/08/13 18:28:28 fabio Exp fabio $";
-#endif
-
 static  char    buffer[BUFLENGTH];
 #ifdef DD_DEBUG
 extern  st_table *checkMinterms (BnetNetwork *net, DdManager *dd, st_table *previous);
@@ -82,7 +75,7 @@ extern  st_table *checkMinterms (BnetNetwork *net, DdManager *dd, st_table *prev
 /* Macro declarations                                                        */
 /*---------------------------------------------------------------------------*/
 
-/**AutomaticStart*************************************************************/
+/** \cond */
 
 /*---------------------------------------------------------------------------*/
 /* Static function prototypes                                                */
@@ -98,51 +91,50 @@ static void freeOption (NtrOptions *option);
 static DdManager * startCudd (NtrOptions *option, int nvars);
 static int ntrReadTree (DdManager *dd, char *treefile, int nvars);
 
+/** \endcond */
 
-/**AutomaticEnd***************************************************************/
 
 /*---------------------------------------------------------------------------*/
 /* Definition of exported functions                                          */
 /*---------------------------------------------------------------------------*/
 
-/**Function********************************************************************
+/**
+  @brief Main program for ntr.
 
-  Synopsis    [Main program for ntr.]
+  @details Performs initialization. Reads command line options and
+  network(s). Builds BDDs with reordering, and optionally does
+  reachability analysis. Prints stats.
 
-  Description [Main program for ntr. Performs
-  initialization. Introduces variables, builds ROBDDs for some
-  functions, and prints-out the BDD structure. A sample file given to
-  the 5740 class.]
+  @sideeffect None
 
-  SideEffects [None]
-
-  SeeAlso     []
-
-******************************************************************************/
+*/
 int
 main(
   int  argc,
   char ** argv)
 {
-    NtrOptions	    *option;	    /* options */
-    FILE            *fp1;           /* first network file pointer */
-    BnetNetwork     *net1 = NULL;   /* first network */
-    DdManager	    *dd;            /* pointer to DD manager & temp DD manager*/
-    int		        exitval;	    /* return value of Cudd_CheckZeroRef */
-    int		        ok;		        /* overall return value from main() */
-    int		        result;		    /* stores the return value of functions */
-    BnetNode	    *node;		    /* auxiliary pointer to network node */
-    int		        i;		        /* loop index */
-    int		        j;		        /* loop index */
-    double	        *signatures;    /* array of signatures */
-    int		        pr;		        /* verbosity level */
-    int		        reencoded;	    /* linear transformations attempted */
-   
+    NtrOptions	*option;	/* options */
+    FILE	*fp1;		/* first network file pointer */
+    BnetNetwork	*net1 = NULL;	/* first network */
+    FILE	*fp2;		/* second network file pointer */
+    BnetNetwork	*net2 = NULL;	/* second network */
+    DdManager	*dd;		/* pointer to DD manager */
+    int		exitval;	/* return value of Cudd_CheckZeroRef */
+    int		ok;		/* overall return value from main() */
+    int		result;		/* stores the return value of functions */
+    BnetNode	*node;		/* auxiliary pointer to network node */
+    int		i;		/* loop index */
+    int		j;		/* loop index */
+    double	*signatures;	/* array of signatures */
+    int		pr;		/* verbosity level */
+    int		reencoded;	/* linear transformations attempted */
+
     /* Initialize. */
 #if defined(_WIN32) && defined(_TWO_DIGIT_EXPONENT)
     (void) _set_output_format(_TWO_DIGIT_EXPONENT);
 #endif
-    option = mainInit(); ntrReadOptions(argc,argv,option);
+    option = mainInit();
+    ntrReadOptions(argc,argv,option);
     pr = option->verb;
     reencoded = option->reordering == CUDD_REORDER_LINEAR ||
 		option->reordering == CUDD_REORDER_LINEAR_CONVERGE ||
@@ -170,7 +162,7 @@ main(
     }
 
     /* Read the second network... */
-    /*if (option->verify == TRUE || option->second == TRUE ||
+    if (option->verify == TRUE || option->second == TRUE ||
 	option->clip > 0.0 || option->dontcares) {
 	fp2 = open_file(option->file2, "r");
 	net2 = Bnet_ReadNetwork(fp2,pr);
@@ -178,14 +170,12 @@ main(
 	if (net2 == NULL) {
 	    (void) fprintf(stderr,"Syntax error in %s.\n",option->file2);
 	    exit(2);
-	}*/
-	
-    /* ... and optionally echo it to the standard output. */
-	/*if (pr > 2) {
+	}
+	/* ... and optionally echo it to the standard output. */
+	if (pr > 2) {
 	    Bnet_PrintNetwork(net2);
 	}
     }
-    */
 
     /* Initialize manager. We start with 0 variables, because
     ** Ntr_buildDDs will create new variables rather than using
@@ -193,75 +183,316 @@ main(
     */
     dd = startCudd(option,net1->ninputs);
     if (dd == NULL) { exit(2); }
- 
+
     /* Build the BDDs for the nodes of the first network. */
     result = Ntr_buildDDs(net1,dd,option,NULL);
     if (result == 0) { exit(2); }
-    
-    /*Bnet_PrintNetwork(net1);
-    Bnet_PrintOrder(net1,dd);
 
-    Bnet_bddDump(dd,net1,"testout",0,0);
-    
-    printf("Size of variable array: %d\n", sizeof(dd->vars));
-	FILE *fptr;
-	fptr = fopen("hw5.dot","w");
-    DdNode *test = Cudd_bddIthVar(dd,3);
-	DdNode *nodes = net1->nodes->dd; 
-	//const char* const in  [3] = {"a","b","c"};
-	//const char* const out [1] = {"f"};
-	Cudd_DumpDot(dd,1,&test,NULL,NULL,fptr);
-	
-	fclose(fptr);
-*/
-
-   if (!st_lookup(net1->hash,net1->outputs[1],(void **)&node)) {
-    printf("Did not find the node/n");
-   }
-
-	FILE *fptr;
-	fptr = fopen("hw5.dot","w");
-	//const char* const in  [3] = {"a","b","c"};
-	//const char* const out [1] = {"f"};
-	Cudd_DumpDot(dd,1,&node->dd,NULL,NULL,fptr);
-
-
-/*---------------------------------------------------------------------------*/
-
-    /* print BDD structure of f */
-	printf("Printing the BDD for f: ptr to the nodes, T & E children\n");
-	Cudd_PrintDebug( dd, node->dd, node->ninp, 3); 
-    
-    /* Disable automatic dynamic reordering */
-    Cudd_AutodynDisable(dd);
-
-    printf("Top node: 0x%X \n", node->dd);
-
-    printf("T child: 0x%X \n", node->dd->type.kids.T);
-    printf("T child index: %d \n", node->dd->type.kids.T->index);
-    printf("E child: 0x%X \n", node->dd->type.kids.E);
-    printf("E child index: %d \n", node->dd->type.kids.T->index);
-   
-    /*
-    DdNode *tmp_node = node->dd;
-    DdNode *tmp_T, tmp_E;
-    for(i = 0; i < node->nfo; i++){
-        tmp_T = tmp_node->dd->type.kids.T;
-        printf("T child: 0x%X \n",tmp_T);
-        tmp_E = tmp_node->dd->type.kids.E;
-        printf("E child: 0x%X \n",tmp_E);
-        
+    /* Build the BDDs for the nodes of the second network if requested. */
+    if (option->verify == TRUE || option->second == TRUE ||
+	option->clip > 0.0 || option->dontcares == TRUE) {
+	char *nodesave = option->node;
+	option->node = NULL;
+	result = Ntr_buildDDs(net2,dd,option,net1);
+	option->node = nodesave;
+	if (result == 0) { exit(2); }
     }
-    */
-    
-    /* Extract each node in the BDD */ 
-    DdGen *test_gen;
-    DdNode *test_node;
-    Cudd_ForeachNode(dd,node->dd,test_gen,test_node)
-    printf(" Test Node 0x%X \n", test_node);
-    
 
-    exit(0);
+    if (option->noBuild == TRUE) {
+	Bnet_FreeNetwork(net1);
+	if (option->verify == TRUE || option->second == TRUE ||
+	    option->clip > 0.0) {
+	    Bnet_FreeNetwork(net2);
+	}
+	freeOption(option);
+	exit(0);
+    }
+    if (option->locGlob != BNET_LOCAL_DD) {
+	/* Print the order before the final reordering. */
+	(void) printf("Order before final reordering\n");
+	result = Bnet_PrintOrder(net1,dd);
+	if (result == 0) exit(2);
+    }
+
+    /* Perform final reordering */
+    if (option->zddtest == FALSE) {
+	result = reorder(net1,dd,option);
+	if (result == 0) exit(2);
+
+	/* Print final order. */
+	if ((option->reordering != CUDD_REORDER_NONE || option->gaOnOff) &&
+	    option->locGlob != BNET_LOCAL_DD) {
+	    (void) printf("New order\n");
+	    result = Bnet_PrintOrder(net1,dd);
+	    if (result == 0) exit(2);
+	}
+
+	/* Print the re-encoded inputs. */
+	if (pr >= 1 && reencoded == 1) {
+	    for (i = 0; i < net1->npis; i++) {
+		if (!st_lookup(net1->hash,net1->inputs[i],(void **)&node)) {
+		    exit(2);
+		}
+		(void) fprintf(stdout,"%s ",node->name);
+		Cudd_PrintDebug(dd,node->dd,Cudd_ReadSize(dd),pr);
+	    }
+	    for (i = 0; i < net1->nlatches; i++) {
+		if (!st_lookup(net1->hash,net1->latches[i][1],(void **)&node)) {
+		    exit(2);
+		}
+		(void) fprintf(stdout,"%s ",node->name);
+		Cudd_PrintDebug(dd,node->dd,Cudd_ReadSize(dd),pr);
+	    }
+	    if (pr >= 3) {
+		result = Cudd_PrintLinear(dd);
+		if (result == 0) exit(2);
+	    }
+	}
+    }
+
+    /* Verify (combinational) equivalence. */
+    if (option->verify == TRUE) {
+	result = Ntr_VerifyEquivalence(dd,net1,net2,option);
+	if (result == 0) {
+	    (void) printf("Verification abnormally terminated\n");
+	    exit(2);
+	} else if (result == -1) {
+	    (void) printf("Combinational verification failed\n");
+	} else {
+	    (void) printf("Verification succeeded\n");
+	}
+    }
+
+    /* Traverse if requested and if the circuit is sequential. */
+    result = Ntr_Trav(dd,net1,option);
+    if (result == 0) exit(2);
+
+    /* Traverse with trasitive closure. */
+    result = Ntr_ClosureTrav(dd,net1,option);
+    if (result == 0) exit(2);
+
+    /* Compute outer envelope if requested and if the circuit is sequential. */
+    if (option->envelope == TRUE && net1->nlatches > 0) {
+	NtrPartTR *T;
+	T = Ntr_buildTR(dd,net1,option,option->image);
+	result = Ntr_Envelope(dd,T,NULL,option);
+        if (result == 0) exit(2);
+	Ntr_freeTR(dd,T);
+    }
+
+    /* Compute SCCs if requested and if the circuit is sequential. */
+    result = Ntr_SCC(dd,net1,option);
+    if (result == 0) exit(2);
+
+    /* Test Constrain Decomposition. */
+    if (option->partition == TRUE && net1->nlatches > 0) {
+	NtrPartTR *T;
+	DdNode *product;
+	DdNode **decomp;
+	int sharingSize;
+	T = Ntr_buildTR(dd,net1,option,NTR_IMAGE_MONO);
+	decomp = Cudd_bddConstrainDecomp(dd,T->part[0]);
+	if (decomp == NULL) exit(2);
+	sharingSize = Cudd_SharingSize(decomp, Cudd_ReadSize(dd));
+	(void) fprintf(stdout, "Decomposition Size: %d components %d nodes\n",
+		       Cudd_ReadSize(dd), sharingSize);
+	product = Cudd_ReadOne(dd);
+	Cudd_Ref(product);
+	for (i = 0; i < Cudd_ReadSize(dd); i++) {
+	    DdNode *intermediate = Cudd_bddAnd(dd, product, decomp[i]);
+	    if (intermediate == NULL) {
+		exit(2);
+	    }
+	    Cudd_Ref(intermediate);
+	    Cudd_IterDerefBdd(dd, product);
+	    product = intermediate;
+	}
+	if (product != T->part[0])
+	    exit(2);
+	Cudd_IterDerefBdd(dd, product);
+	for (i = 0; i < Cudd_ReadSize(dd); i++) {
+	    Cudd_IterDerefBdd(dd, decomp[i]);
+	}
+	FREE(decomp);
+	Ntr_freeTR(dd,T);
+    }
+
+    /* Test char-to-vect conversion. */
+    result = Ntr_TestCharToVect(dd,net1,option);
+    if (result == 0) exit(2);
+
+    /* Test extraction of two-literal clauses. */
+    result = Ntr_TestTwoLiteralClauses(dd,net1,option);
+    if (result == 0) exit(2);
+
+    /* Test BDD minimization functions. */
+    result = Ntr_TestMinimization(dd,net1,net2,option);
+    if (result == 0) exit(2);
+
+    /* Test density-related functions. */
+    result = Ntr_TestDensity(dd,net1,option);
+    if (result == 0) exit(2);
+
+    /* Test decomposition functions. */
+    result = Ntr_TestDecomp(dd,net1,option);
+    if (result == 0) exit(2);
+
+    /* Test cofactor estimation functions. */
+    result = Ntr_TestCofactorEstimate(dd,net1,option);
+    if (result == 0) exit(2);
+
+    /* Test BDD clipping functions. */
+    result = Ntr_TestClipping(dd,net1,net2,option);
+    if (result == 0) exit(2);
+
+    /* Test BDD equivalence and containment under DC functions. */
+    result = Ntr_TestEquivAndContain(dd,net1,net2,option);
+    if (result == 0) exit(2);
+
+    /* Test BDD Cudd_bddClosestCube. */
+    result = Ntr_TestClosestCube(dd,net1,option);
+    if (result == 0) exit(2);
+
+    /* Test ZDDs if requested. */
+    if (option->stateOnly == FALSE && option->zddtest == TRUE) {
+	result = Ntr_testZDD(dd,net1,option);
+	if (result == 0)
+	    (void) fprintf(stdout,"ZDD test failed.\n");
+	result = Ntr_testISOP(dd,net1,option);
+	if (result == 0)
+	    (void) fprintf(stdout,"ISOP test failed.\n");
+    }
+
+    /* Compute maximum flow if requested and if the circuit is sequential. */
+    if (option->maxflow == TRUE && net1->nlatches > 0) {
+	result = Ntr_maxflow(dd,net1,option);
+	if (result == 0)
+	    (void) fprintf(stdout,"Maxflow computation failed.\n");
+    }
+
+    /* Compute shortest paths if requested and if the circuit is sequential. */
+    if (option->shortPath != NTR_SHORT_NONE && net1->nlatches > 0) {
+	result = Ntr_ShortestPaths(dd,net1,option);
+	if (result == 0)
+	    (void) fprintf(stdout,"Shortest paths computation failed.\n");
+    }
+
+    /* Compute output signatures if so requested. */
+    if (option->signatures) {
+	(void) printf("Positive cofactor measures\n");
+	for (i = 0; i < net1->noutputs; i++) {
+	    if (!st_lookup(net1->hash,net1->outputs[i],(void **)&node)) {
+		exit(2);
+	    }
+	    signatures = Cudd_CofMinterm(dd, node->dd);
+	    if (signatures) {
+		(void) printf("%s:\n", node->name);
+		for (j = 0; j < Cudd_ReadSize(dd); j++) {
+		    if((j%5 == 0)&&i) (void) printf("\n");
+		    (void) printf("%5d: %-#8.4g ", j, signatures[j]);
+		}
+		(void) printf("\n");
+		FREE(signatures);
+	    } else {
+		(void) printf("Signature computation failed.\n");
+	    }
+	}
+    }
+
+    /* Dump BDDs if so requested. */
+    if (option->bdddump && option->second == FALSE &&
+	option->density == FALSE && option->decomp == FALSE &&
+	option->cofest == FALSE && option->clip < 0.0 &&
+	option->scc == FALSE) {
+	(void) printf("Dumping BDDs to %s\n", option->dumpfile);
+	if (option->node != NULL) {
+	    if (!st_lookup(net1->hash,option->node,(void **)&node)) {
+		exit(2);
+	    }
+	    result = Bnet_bddArrayDump(dd,net1,option->dumpfile,&(node->dd),
+				       &(node->name),1,option->dumpFmt);
+	} else {
+	    result = Bnet_bddDump(dd, net1, option->dumpfile,
+				  option->dumpFmt, reencoded);
+	}
+	if (result != 1) {
+	    (void) printf("BDD dump failed.\n");
+	}
+    }
+
+    /* Print stats and clean up. */
+    if (pr >= 0) {
+	result = Cudd_PrintInfo(dd,stdout);
+	if (result != 1) {
+	    (void) printf("Cudd_PrintInfo failed.\n");
+	}
+    }
+
+#if defined(DD_DEBUG) && !defined(DD_NO_DEATH_ROW)
+    (void) fprintf(dd->err,"%d empty slots in death row\n",
+    cuddTimesInDeathRow(dd,NULL));
+#endif
+    (void) printf("Final size: %ld\n", Cudd_ReadNodeCount(dd));
+
+    /* Dispose of node BDDs. */
+    node = net1->nodes;
+    while (node != NULL) {
+	if (node->dd != NULL &&
+	node->type != BNET_INPUT_NODE &&
+	node->type != BNET_PRESENT_STATE_NODE) {
+	    Cudd_IterDerefBdd(dd,node->dd);
+            node->dd = NULL;
+	}
+	node = node->next;
+    }
+    /* Dispose of network. */
+    Bnet_FreeNetwork(net1);
+    /* Do the same cleanup for the second network if it was created. */
+    if (option->verify == TRUE || option->second == TRUE ||
+	option->clip > 0.0 || option->dontcares == TRUE) {
+        /* Since option->second is TRUE and reading the second network
+         * didn't result in a failure, we know net2 is not NULL. */
+        assert(net2 != NULL);
+	node = net2->nodes;
+	while (node != NULL) {
+	    if (node->dd != NULL &&
+		node->type != BNET_INPUT_NODE &&
+		node->type != BNET_PRESENT_STATE_NODE) {
+		Cudd_IterDerefBdd(dd,node->dd);
+                node->dd = NULL;
+	    }
+	    node = node->next;
+	}
+	Bnet_FreeNetwork(net2);
+    }
+
+    /* Check reference counts: At this point we should have dereferenced
+    ** everything we had, except in the case of re-encoding.
+    */
+    if (reencoded == CUDD_FALSE) {
+        exitval = Cudd_CheckZeroRef(dd);
+        ok = exitval != 0;  /* ok == 0 means O.K. */
+        if (exitval != 0) {
+            (void) fflush(stdout);
+            (void) fprintf(stderr,
+                           "%d non-zero DD reference counts after dereferencing\n", exitval);
+        }
+    } else {
+        ok = 0;
+    }
+
+#ifdef DD_DEBUG
+    Cudd_CheckKeys(dd);
+#endif
+
+    Cudd_Quit(dd);
+
+    if (pr >= 0) (void) printf("total time = %s\n",
+	    util_print_time(util_cpu_time() - option->initialTime));
+    freeOption(option);
+    if (pr >= 0) util_print_cpu_stats(stdout);
+
+    exit(ok);
 
 } /* end of main */
 
@@ -273,6 +504,7 @@ main(
 /*---------------------------------------------------------------------------*/
 /* Definition of static functions                                            */
 /*---------------------------------------------------------------------------*/
+
 
 /**
   @brief Allocates the option structure and initializes it.

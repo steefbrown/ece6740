@@ -5,7 +5,7 @@
 
 **************READING IN NETWORK***************
 
-Number of inputs: 1
+Number of inputs: 2
 
 
 
@@ -15,17 +15,17 @@ Number of inputs: 1
 
 Printing the BDD for f: ptr to the nodes, T & E children
 
-: 4 nodes 1 leaves 1.25 minterms
-ID =  0x10143c	index = 0	T = 1        	E = !0x10143b
-ID =  0x10143b	index = 1	T = 1        	E = !0x10143a
-ID =  0x10143a	index = 2	T = 1        	E = !1        
+: 4 nodes 1 leaves 1.5 minterms
+ID = !0x7c73c	index = 0	T = 1        	E = !0x7c73b
+ID =  0x7c73b	index = 1	T = 1        	E = !0x7c73a
+ID =  0x7c73a	index = 2	T = 1        	E = !1        
 
 
 
 **************COUNTING BDD NODES***************
 
 
-Top node: 0x2028780 
+Top node: 0xF8E781 
 
 Number of nodes: 4 
 
@@ -34,35 +34,35 @@ Number of levels: 3
 
 **************DETERMINING BOUNDSET AND FREESET NODES***************
 
-Node: 2028680 
+Node: F8E680 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 2028740 
+Node: F8E740 
 Node index: 2 
 i: 2 
 
-Node: 2028760 
+Node: F8E760 
 Node index: 1 
 i: 1 
 
-Node: 2028780 
+Node: F8E780 
 Node index: 0 
 i: 0 
 
 
 
 
- T node value: 2028680
+ T node value: F8E680
 number edges: 0 
-E node value: 2028741
+E node value: F8E741
 number edges: 0 
 
 
 
- T node value: 2028680
+ T node value: F8E680
 number edges: 0 
-E node value: 2028761
+E node value: F8E761
 number edges: 0 
 Cut Level: 0
 
@@ -74,7 +74,7 @@ i: 0
 boundsetSize: 0
 n: 4
 Bound Set:
-Free Set: 2028680, 2028740, 0, 0,
+Free Set: F8E680, F8E740, 0, 0,
 
 
 **************DETERMINING NUMBER OF SIG ZERO EDGES***************
@@ -98,43 +98,43 @@ End of Bi-Decomposition Method.
 
 Starting Functional Decomposition Method
 
-Node: 203DBC0 
+Node: FA3BC0 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 203DC80 
+Node: FA3C80 
 Node index: 2 
 i: 2 
 
-Node: 203DCA0 
+Node: FA3CA0 
 Node index: 1 
 i: 1 
 
-Node: 203DCC0 
+Node: FA3CC0 
 Node index: 0 
 i: 0 
 
-Node: 2046E20 
+Node: FACE20 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 2046EE0 
+Node: FACEE0 
 Node index: 2 
 i: 2 
 
-Node: 2046F00 
+Node: FACF00 
 Node index: 1 
 i: 1 
 
-Node: 2046F20 
+Node: FACF20 
 Node index: 0 
 i: 0 
 
 boundsetSize = 0
 Freeset Size = 4
-One node is: 203DBC0
-Freeset[0] is: 2028680
-Freeset[1] is: 2028740
+One node is: FA3BC0
+Freeset[0] is: F8E680
+Freeset[1] is: F8E740
 cvar = 0
 
 temp_cvar = 0
@@ -169,8 +169,21 @@ temp_cvar = 0
 temp_cvar = 0
 temp_cvar = 0
 temp_cvar = 0
-number of bits = 0
+number of bits = 1
 
+Our boundset nodes:
+Our cutset nodes:
+One Node = FACE20, Zero Node = FACE21
+
+*********Mapping**********
+
+*********End of Mapping**********
+Root node: FACF21
+filename: ash_curt_files/hw5_0.blif
+Creating blif...
+Optimizing variable ordering...
+Estimated delay: 0.5us...
+Net name: s27c.bench
 End of main
 
 

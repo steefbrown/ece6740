@@ -5,12 +5,15 @@ edge [dir = none];
 { node [shape = plaintext];
   edge [style = invis];
   "CONST NODES" [style = invis];
-" x " -> " y " -> "CONST NODES"; 
+" z " -> " x " -> " y " -> "CONST NODES"; 
 }
 { rank = same; node [shape = box]; edge [style = invis];
-"  g  "; }
+"  f  "; }
+{ rank = same; " z ";
+"0x65";
+}
 { rank = same; " x ";
-"0x72";
+"0x63";
 }
 { rank = same; " y ";
 "0x61";
@@ -19,9 +22,11 @@ edge [dir = none];
 { node [shape = box]; "0x5c";
 }
 }
-"  g  " -> "0x72" [style = solid];
-"0x72" -> "0x5c";
-"0x72" -> "0x61" [style = dashed];
+"  f  " -> "0x65" [style = solid];
+"0x65" -> "0x63";
+"0x65" -> "0x63" [style = dotted];
+"0x63" -> "0x61";
+"0x63" -> "0x61" [style = dotted];
 "0x61" -> "0x5c";
 "0x61" -> "0x5c" [style = dotted];
 "0x5c" [label = "1"];

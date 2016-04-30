@@ -1,0 +1,17 @@
+.model DD
+.inputs 1 3
+.outputs f0
+.names 100cbe
+1
+.names 1 100cbe 100cbe 100cc3
+11- 1
+0-0 1
+.names 3 100cbe 100cc3 100cc9
+11- 1
+0-0 1
+.names 2 100cc9 100cbe 100cd6
+11- 1
+0-0 1
+.names 100cd6 f0
+1 1
+.end

@@ -75,7 +75,7 @@ var searchData=
   ['stab_5fsize',['STAB_SIZE',['../cuddInt_8h.html#ab2d303f24064e7fe8aa868d2e8850ab2',1,'cuddInt.h']]],
   ['stack',['stack',['../structDdManager.html#af99ce33d5dcd3dcf67f10bd7da6a5aa5',1,'DdManager']]],
   ['start_5ftime',['start_time',['../structflowStatsStruct.html#aa029848b29ac39e0372ea94060ab86cb',1,'flowStatsStruct']]],
-  ['startcudd',['startCudd',['../main__nanotrav_8c.html#af20891a5ccd4ba15456d639554170e57',1,'main_nanotrav.c']]],
+  ['startcudd',['startCudd',['../main_8c.html#af20891a5ccd4ba15456d639554170e57',1,'main.c']]],
   ['starttime',['startTime',['../structDdManager.html#a7436169471f7648c313c0c4a3674942c',1,'DdManager']]],
   ['stash',['stash',['../structDdManager.html#a0c7a23b6822e1f426e2021e6864af0e9',1,'DdManager']]],
   ['stateonly',['stateOnly',['../structNtrOptions.html#a6a8ca031b7f1357894de94f27f56c3c1',1,'NtrOptions']]],
