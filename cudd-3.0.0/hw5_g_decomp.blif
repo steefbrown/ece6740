@@ -1,0 +1,27 @@
+.model hw5_g_decomp.eqn
+.inputs x y z
+.outputs g
+.names q d g
+11 1
+.names fffef
+ 1
+.names z fffef ffff5
+11 1
+00 1
+.names y fffef ffff5 100004
+11- 1
+0-1 1
+.names ffff5 ffffa
+1 1
+.names x 100004 ffffa q
+11- 1
+0-1 1
+.names ffb5c
+ 1
+.names y ffb5c ffb61
+11 1
+00 1
+.names x ffb5c ffb61 d
+11- 1
+0-1 1
+.end

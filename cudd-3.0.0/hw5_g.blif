@@ -1,0 +1,9 @@
+.model hw5_g.eqn
+.inputs x y z
+.outputs g
+.names x y z g
+111 1
+011 1
+101 1
+110 1
+.end

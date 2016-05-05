@@ -1,0 +1,5 @@
+INORDER = x y;
+OUTORDER = g;
+ffb5c = 1;
+ffb61 = !y*!ffb5c + y*ffb5c;
+g = !x*ffb61 + x*ffb5c;

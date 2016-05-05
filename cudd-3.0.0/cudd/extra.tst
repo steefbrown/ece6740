@@ -30,7 +30,7 @@ g: 8191 nodes 1 leaves 531441 minterms
 g has 531441 minterms
 EPD count for g = 5.314410e+05
 caught timeout
-so far: 262143 nodes 1 leaves 8264970432 minterms
+so far: 131071 nodes 1 leaves 11019960576 minterms
 f implies 0 clauses
 **** CUDD modifiable parameters ****
 Hard limit for cache size: 2796202
@@ -55,26 +55,26 @@ GA population size: 0
 Number of crossovers for GA: 0
 Next reordering threshold: 4004
 **** CUDD non-modifiable parameters ****
-Memory in use: 29317384
-Peak number of nodes: 541660
-Peak number of live nodes: 410269
-Number of BDD variables: 38
+Memory in use: 23714856
+Peak number of nodes: 385294
+Peak number of live nodes: 318753
+Number of BDD variables: 37
 Number of ZDD variables: 0
 Number of cache entries: 262144
-Number of cache look-ups: 862304
-Number of cache hits: 180018
-Number of cache insertions: 682450
-Number of cache collisions: 551852
+Number of cache look-ups: 613088
+Number of cache hits: 127737
+Number of cache insertions: 485496
+Number of cache collisions: 369518
 Number of cache deletions: 0
-Cache used slots = 49.82% (expected 92.60%)
-Soft limit for cache size: 746496
-Number of buckets in unique table: 186624
-Used buckets in unique table: 92.51% (expected 92.16%)
-Number of BDD and ADD nodes: 541333
+Cache used slots = 44.24% (expected 84.31%)
+Soft limit for cache size: 448512
+Number of buckets in unique table: 112128
+Used buckets in unique table: 93.65% (expected 93.33%)
+Number of BDD and ADD nodes: 384282
 Number of ZDD nodes: 0
-Number of dead BDD and ADD nodes: 541291
+Number of dead BDD and ADD nodes: 384241
 Number of dead ZDD nodes: 0
-Total number of nodes allocated: 541333
+Total number of nodes allocated: 384282
 Total number of nodes reclaimed: 0
 Garbage collections so far: 0
 Time for garbage collection: 0.00 sec

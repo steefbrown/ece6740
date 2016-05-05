@@ -1,17 +1,17 @@
 .model DD
-.inputs x y z
-.outputs f
-.names e1fef
+.inputs 0 1 2
+.outputs f0
+.names 96dc5
 1
-.names z e1fef e1fef e1ff5
+.names 2 96dc5 96dc5 96dcb
 11- 1
 0-0 1
-.names y e1ff5 e1ff5 e1ff7
+.names 1 96dc5 96dcb 96dd0
 11- 1
-0-0 1
-.names x e1ff7 e1ff7 e1ff8
+0-1 1
+.names 0 96dc5 96dd0 96dd1
 11- 1
-0-0 1
-.names e1ff8 f
-1 1
+0-1 1
+.names 96dd1 f0
+0 1
 .end

@@ -57,7 +57,7 @@
 
 #define BUFLENGTH 8192
 
-#define OUTPUT_BDD 0
+#define OUTPUT_BDD  1 
 
 /*---------------------------------------------------------------------------*/
 /* Stucture declarations                                                     */
@@ -312,9 +312,9 @@ main(
 
     // Create Dot file for the BDD to verify
 	FILE *fptr;
-	fptr = fopen("hw5_quo.dot","w");
-	Cudd_DumpDot(dd_quo,1,&node2->dd,node2->inputs,&node2->name,fptr);
-    fclose(fptr);
+	//fptr = fopen("hw5_quo.dot","w");
+	//Cudd_DumpDot(dd_quo,1,&node2->dd,node2->inputs,&node2->name,fptr);
+    //fclose(fptr);
 
 /*---------------------------------------------------------------------------*/
 
@@ -355,7 +355,7 @@ main(
     DdNode *test_node;
     Cudd_ForeachNode(dd,node->dd,test_gen,test_node){
         nodeCount++;
-        
+        Cudd_bddBindVar(dd, i);
         //printf("test_node index: %d\n", test_node->index);
         //printf("test_node: %X. dd->one: %X. Comp(dd->one): %X.\n",test_node,dd->one,Cudd_Complement(dd->one)); 
         if((test_node != Cudd_Complement(dd->one)) && (test_node != dd->one)){
@@ -394,13 +394,19 @@ main(
     if (numLevels < 2) { printf("This network has no meaningful decomposition.\n\n"); exit(2); }
 
     for(cutLevel_temp = 2; cutLevel_temp < numLevels; cutLevel_temp++){
+        boundsetSize = 0;
+        n = 0;
         Cudd_ForeachNode(dd,node->dd,test_gen,test_node){
             i = test_node->index;
             printf("Node: %X \n", test_node);
             printf("Node index: %d \n", test_node->index);
             printf("i: %d \n\n", i);
             if(i < cutLevel_temp)
+            {
+                printf("Adding node to our bound set*****************************\n");
                 boundset[boundsetSize++] = test_node;
+                printf("boundsetSize increments to: %d\n", boundsetSize);
+            }
             else
                 freeset[n++] = test_node;
         }//end Cudd_ForeachNode
@@ -444,7 +450,10 @@ main(
         i = test_node->index;
         printf("i: %d \n", i);
         if(i < cutLevel)
+        {
             quo_boundset[boundsetSize++] = test_node;
+            printf("boundsetSize increments to: %d\n", boundsetSize);
+        }
         else
             quo_freeset[n++] = test_node;
     }
@@ -503,26 +512,35 @@ main(
                 } 
            }
        }
+       printf("Before Reduce Heap\n");
+       Cudd_ReduceHeap(dd,CUDD_REORDER_SAME,1);
+       printf("After Reduce Heap\n");
 
        test_node = Cudd_E(boundset[i]);
        if(test_node != Cudd_Complement(dd->one)){
            for(j = 0; j < n; j++){
                 if(test_node == freeset[j])
-                    {boundset[i]->type.kids.E = dd->one; break;} 
+                    {
+                        printf("Node is in freeset else child. j = %d\n", j);
+                        boundset[i]->type.kids.E = dd->one; break;
+                        printf("Node was redirected to one node else child.\n");
+                    } 
            }
        }
+       Cudd_ReduceHeap(dd,CUDD_REORDER_SAME,1);
     }
 
 
-    Cudd_ReduceHeap(dd,CUDD_REORDER_SAME,1);
-
+    printf("Dumping out the divisor\n");
     
     fptr = fopen("hw5_divisor.blif","w");
-    Cudd_DumpBlif(dd,1,&node->dd,node->inputs,&node->name,NULL,fptr,0);
+    //Cudd_DumpBlif(dd,1,&node->dd,node->inputs,&node->name,NULL,fptr,0);
+    Cudd_DumpBlif(dd,1,&node->dd,NULL,NULL,NULL,fptr,0);
     fclose(fptr);
     
     fptr = fopen("hw5_divisor.dot","w");
-    Cudd_DumpDot(dd,1,&node->dd,node->inputs,&node->name,fptr);
+    //Cudd_DumpDot(dd,1,&node->dd,node->inputs,&node->name,fptr);
+    Cudd_DumpDot(dd,1,&node->dd,NULL,NULL,fptr);
     fclose(fptr);
    
     printf("\n\n**************BUILDING QUOTIENT BDD***************\n\n");
@@ -553,13 +571,15 @@ main(
     //char *onames2[1] = {"G"};
     
     fptr = fopen("hw5_quotient.blif","w");
-    Cudd_DumpBlif(dd_quo,1,&node2->dd,node2->inputs,&node2->name,NULL,fptr,0);
+    //Cudd_DumpBlif(dd_quo,1,&node2->dd,node2->inputs,&node2->name,NULL,fptr,0);
+    Cudd_DumpBlif(dd_quo,1,&node2->dd,NULL,NULL,NULL,fptr,0);
     fclose(fptr);
 
     printf("Printing Quotient DOT\n"); 
     
     fptr = fopen("hw5_quotient.dot","w");
-    Cudd_DumpDot(dd_quo,1,&node2->dd,node2->inputs,&node2->name,fptr);
+    //Cudd_DumpDot(dd_quo,1,&node2->dd,node2->inputs,&node2->name,fptr);
+    Cudd_DumpDot(dd_quo,1,&node2->dd,NULL,NULL,fptr);
     fclose(fptr);
    
     printf("\nEnd of Bi-Decomposition Method.\n\n\n");
@@ -597,6 +617,7 @@ main(
 
     Cudd_ForeachNode(dd_curt,node_curt->dd,test_gen,test_node){
         i = test_node->index;
+        Cudd_bddBindVar(dd_curt, i);
         printf("Node: %X \n", test_node);
         printf("Node index: %d \n", test_node->index);
         printf("i: %d \n\n", i);
@@ -780,8 +801,23 @@ main(
         printf("Mapping node = %X, Mapping E_Enc = %d, Mapping T_Enc = %d\n", map[i].node, map[i].E_encoding, map[i].T_encoding);
     printf("\n*********End of Mapping**********\n");
     char filename[100];
-    
-    
+
+    printf("\n\nPrinting the BDD for f BEFORE: ptr to the nodes, T & E children\n\n");
+    Cudd_PrintDebug( dd_curt, node_curt->dd, node_curt->ninp, 3); 
+    //Remove all freeset nodes
+    for(k = 0; k < n; k++)
+    {
+       printf("Freeset node to be removed = %X\n",curt_freeset[k]);
+       if((curt_freeset[k] != dd_curt->one) && (curt_freeset[k] != Cudd_Complement(dd_curt->one))) {
+           printf("Removing freeset \n");
+           curt_freeset[k]->type.kids.T = curt_freeset[k]->type.kids.E;
+           //Cudd_IterDerefBdd(dd_curt, curt_freeset[k]);
+       }
+    }
+	result = Cudd_ReduceHeap(dd_curt,CUDD_REORDER_SAME,1);
+    printf("\n\nPrinting the BDD for f AFTER: ptr to the nodes, T & E children\n\n");       
+    Cudd_PrintDebug( dd_curt, node_curt->dd, node_curt->ninp, 3);
+
     for(i = 0; i < bits; i++){
        
        //Assign the child to the relevant encoding       
@@ -793,26 +829,34 @@ main(
                map[j].node->type.kids.T = dd_curt->one;
            else
            {
-               printf("Map node child before assignment is: %X\n", map[j].node->type.kids.T);
+               printf("Map node then child before assignment is: %X\n", map[j].node->type.kids.T);
                map[j].node->type.kids.T = Cudd_Complement(dd_curt->one);
-               printf("Map node child after assignment is: %X\n", map[j].node->type.kids.T);
+               printf("Map node then child after assignment is: %X\n", map[j].node->type.kids.T);
            }
 
 	       result = Cudd_ReduceHeap(dd_curt,CUDD_REORDER_SAME,1);
-       printf("\n\nPrinting the BDD for f: ptr to the nodes, T & E children\n\n");
-       //Cudd_PrintDebug( dd_curt, node_curt->dd, node_curt->ninp, 3); 
+           printf("\n\nPrinting the BDD for f: ptr to the nodes, T & E children\n\n");
+           //Cudd_PrintDebug( dd_curt, node_curt->dd, node_curt->ninp, 3); 
 
            printf("Map_Node = %X, Encoding = %d, Shifted Encoding = %d\n", map[j].node, map[j].E_encoding, (map[j].E_encoding >> i));
            //Else child assignment
            if((map[j].E_encoding >> i) & 0x1)
+           {
+               printf("Map node else child before assignment is: %X\n", map[j].node->type.kids.E);
                map[j].node->type.kids.E = dd_curt->one;
+               printf("Map node else child after assignment is: %X\n", map[j].node->type.kids.E);
+           }
            else
+           {
+               printf("Map node else child before assignment is: %X\n", map[j].node->type.kids.E);
                map[j].node->type.kids.E = Cudd_Complement(dd_curt->one);
+               printf("Map node else child after assignment is: %X\n", map[j].node->type.kids.E);
+           }
 	       result = Cudd_ReduceHeap(dd_curt,CUDD_REORDER_SAME,1);
-       printf("\n\nPrinting the BDD for f: ptr to the nodes, T & E children\n\n");
-       Cudd_PrintDebug( dd_curt, node_curt->dd, node_curt->ninp, 3); 
+           printf("\n\nPrinting the BDD for f: ptr to the nodes, T & E children\n\n");
+           
+           Cudd_PrintDebug( dd_curt, node_curt->dd, node_curt->ninp, 3); 
        }
-       
 
        printf("Root node: %X\n",node_curt->dd);
 
@@ -833,8 +877,7 @@ main(
        Cudd_DumpDot(dd_curt,1,&node_curt->dd,NULL,NULL,fptr);
        fclose(fptr);
 
-   }
-    
+    }
        
     printf("Net name: %s\n", net_curt->name);
     printf("End of main\n\n\n");

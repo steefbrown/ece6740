@@ -16,103 +16,95 @@ Number of inputs: 1
 Printing the BDD for f: ptr to the nodes, T & E children
 
 : 2 nodes 1 leaves 1 minterms
-ID =  0x1317e0	index = 10	T = 1        	E = !1        
+ID =  0xaf25f	index = 9	T = 1        	E = !1        
 
 
 
 **************COUNTING BDD NODES***************
 
 
-Top node: 0x262FC00 
+Top node: 0x15E4BE0 
 
 Number of nodes: 2 
 
-Number of levels: 11 
+Number of levels: 10 
 
 
 **************DETERMINING BOUNDSET AND FREESET NODES***************
 
-Node: 262FA40 
+Node: 15E4A40 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 262FC00 
-Node index: 10 
-i: 10 
+Node: 15E4BE0 
+Node index: 9 
+i: 9 
 
-Node: 262FA40 
+Node: 15E4A40 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 262FC00 
-Node index: 10 
-i: 10 
+Node: 15E4BE0 
+Node index: 9 
+i: 9 
 
-Node: 262FA40 
+Node: 15E4A40 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 262FC00 
-Node index: 10 
-i: 10 
+Node: 15E4BE0 
+Node index: 9 
+i: 9 
 
-Node: 262FA40 
+Node: 15E4A40 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 262FC00 
-Node index: 10 
-i: 10 
+Node: 15E4BE0 
+Node index: 9 
+i: 9 
 
-Node: 262FA40 
+Node: 15E4A40 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 262FC00 
-Node index: 10 
-i: 10 
+Node: 15E4BE0 
+Node index: 9 
+i: 9 
 
-Node: 262FA40 
+Node: 15E4A40 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 262FC00 
-Node index: 10 
-i: 10 
+Node: 15E4BE0 
+Node index: 9 
+i: 9 
 
-Node: 262FA40 
+Node: 15E4A40 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 262FC00 
-Node index: 10 
-i: 10 
+Node: 15E4BE0 
+Node index: 9 
+i: 9 
 
-Node: 262FA40 
+Node: 15E4A40 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 262FC00 
-Node index: 10 
-i: 10 
-
-Node: 262FA40 
-Node index: 2147483647 
-i: 2147483647 
-
-Node: 262FC00 
-Node index: 10 
-i: 10 
+Node: 15E4BE0 
+Node index: 9 
+i: 9 
 
 Cut Level: 0
 
 Number of Sigma Zero Edges = 0
 i: 2147483647 
-i: 10 
+i: 9 
 boundsetSize: 0
 n: 2
 Bound Set:
-Free Set: 262FA40, 262FC00,
+Free Set: 15E4A40, 15E4BE0,
 
 
 **************DETERMINING NUMBER OF SIG ZERO EDGES***************
@@ -121,7 +113,7 @@ Free Set: 262FA40, 262FC00,
 
 **************BUILDING DIVISOR BDD***************
 
-BDD reordering with sifting: from 168 to ... 121 nodes in 0 sec
+Dumping out the divisor
 
 
 **************BUILDING QUOTIENT BDD***************
@@ -136,27 +128,27 @@ End of Bi-Decomposition Method.
 
 Starting Functional Decomposition Method
 
-Node: 265B1A0 
+Node: 16101A0 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 265B360 
-Node index: 10 
-i: 10 
+Node: 1610340 
+Node index: 9 
+i: 9 
 
-Node: 2664240 
+Node: 1619240 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 2664400 
-Node index: 10 
-i: 10 
+Node: 16193E0 
+Node index: 9 
+i: 9 
 
 boundsetSize = 0
 Freeset Size = 2
-One node is: 265B1A0
-Freeset[0] is: 262FA40
-Freeset[1] is: 262FC00
+One node is: 16101A0
+Freeset[0] is: 15E4A40
+Freeset[1] is: 15E4BE0
 cvar = 0
 
 temp_cvar = 0
@@ -195,12 +187,30 @@ number of bits = 1
 
 Our boundset nodes:
 Our cutset nodes:
-One Node = 2664240, Zero Node = 2664241
+One Node = 1619240, Zero Node = 1619241
 
 *********Mapping**********
 
 *********End of Mapping**********
-Root node: 2664400
+
+
+Printing the BDD for f BEFORE: ptr to the nodes, T & E children
+
+: 2 nodes 1 leaves 1 minterms
+ID =  0xb0c9f	index = 9	T = 1        	E = !1        
+
+Freeset node to be removed = 1619240
+Freeset node to be removed = 16193E0
+Removing freeset 
+BDD reordering with sifting: from 168 to ... 121 nodes in 0.01 sec
+
+
+Printing the BDD for f AFTER: ptr to the nodes, T & E children
+
+: 2 nodes 1 leaves 1 minterms
+ID =  0xb0c9f	index = 9	T = 1        	E = !1        
+
+Root node: 16193E0
 filename: ash_curt_files/hw5_0.blif
 Creating blif...
 Optimizing variable ordering...

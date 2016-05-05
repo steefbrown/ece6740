@@ -1,0 +1,102 @@
+Script started on Thu 05 May 2016 02:47:00 PM MDT
+]0;smbrown@lab1-31:cudd-3.0.0[smbrown@lab1-31 cudd-3.0.0]$ sis
+UC Berkeley, SIS 1.3 (compiled 2004-04-04 18:58:04)
+sis> read_blif hw5_g.blif
+sis> print_stats
+hw5_g.eqn     	pi= 3	po= 1	nodes=  1	latches= 0
+lits(sop)=  12
+sis> read_library lib2.genlib
+sis> read_library -a lib2_latch.genlib
+sis> map
+WARNING: uses as primary input drive the value (1.98,1.82)
+WARNING: uses as primary input arrival the value (0.00,0.00)
+WARNING: uses as primary input max load limit the value (999.00)
+WARNING: uses as primary output required the value (0.00,0.00)
+WARNING: uses as primary output load the value 0.10
+sis> m print_map_stats
+Total Area		= 7424.00
+Gate Count		= 5
+Buffer Count		= 0
+Inverter Count 		= 3
+Most Negative Slack	=  -3.29
+Sum of Negative Slacks	=  -3.29
+Number of Critical PO	= 1
+sis> souce script.delay
+unknown command 'souce'
+sis> cour    source script.delay
+WARNING: uses as primary input drive the value (1.98,1.82)
+WARNING: uses as primary input arrival the value (0.00,0.00)
+WARNING: uses as primary output required the value (0.00,0.00)
+WARNING: uses as primary output load the value 0.10
+WARNING: uses as primary output required the value (2.21,2.15)
+WARNING: uses as primary output required the value (2.21,2.15)
+# of outputs:          1
+total gate area:       4640.00
+maximum arrival time: (2.21,2.15)
+maximum po slack:     (0.00,-0.00)
+minimum po slack:     (0.00,-0.00)
+total neg slack:      (0.00,-0.00)
+# of failing outputs:  1
+sis> print_map_stats
+Total Area		= 4640.00
+Gate Count		= 3
+Buffer Count		= 0
+Inverter Count 		= 0
+Most Negative Slack	=  -0.00
+Sum of Negative Slacks	=  -0.00
+Number of Critical PO	= 1
+sis> read_blif hw5_g_decomp.blif
+sis> map   print_stats
+hw5_g_decomp.eqn	pi= 3	po= 1	nodes=  9	latches= 0
+lits(sop)=  23
+sis> map
+WARNING: uses as primary input drive the value (1.98,1.82)
+WARNING: uses as primary input arrival the value (0.00,0.00)
+WARNING: uses as primary input max load limit the value (999.00)
+WARNING: uses as primary output required the value (0.00,0.00)
+WARNING: uses as primary output load the value 0.10
+sis> source script             print_map_stats
+Total Area		= 10208.00
+Gate Count		= 7
+Buffer Count		= 0
+Inverter Count 		= 3
+Most Negative Slack	=  -3.98
+Sum of Negative Slacks	=  -3.98
+Number of Critical PO	= 1
+sis> print_map_stats
+Total Area		= 10208.00
+Gate Count		= 7
+Buffer Count		= 0
+Inverter Count 		= 3
+Most Negative Slack	=  -3.98
+Sum of Negative Slacks	=  -3.98
+Number of Critical PO	= 1
+sis> source script.delay
+WARNING: uses as primary input drive the value (1.98,1.82)
+WARNING: uses as primary input arrival the value (0.00,0.00)
+WARNING: uses as primary output required the value (0.00,0.00)
+WARNING: uses as primary output load the value 0.10
+WARNING: uses as primary output required the value (2.21,2.15)
+WARNING: uses as primary output required the value (2.21,2.15)
+# of outputs:          1
+total gate area:       4640.00
+maximum arrival time: (2.21,2.15)
+maximum po slack:     (0.00,-0.00)
+minimum po slack:     (0.00,-0.00)
+total neg slack:      (0.00,-0.00)
+# of failing outputs:  1
+sis> print_map_stats
+Total Area		= 4640.00
+Gate Count		= 3
+Buffer Count		= 0
+Inverter Count 		= 0
+Most Negative Slack	=  -0.00
+Sum of Negative Slacks	=  -0.00
+Number of Critical PO	= 1
+sis> quit
+]0;smbrown@lab1-31:cudd-3.0.0[smbrown@lab1-31 cudd-3.0.0]$ e[Kquit
+quit: Command not found.
+]0;smbrown@lab1-31:cudd-3.0.0[smbrown@lab1-31 cudd-3.0.0]$ exit
+exit
+
+Script done on Thu 05 May 2016 02:50:53 PM MDT

@@ -1,17 +1,17 @@
 .model DD
 .inputs 0 1 2
 .outputs f0
-.names e2a99
+.names 9786f
 1
-.names 2 e2a99 e2a99 e2a9f
+.names 2 9786f 9786f 97875
 11- 1
 0-0 1
-.names 1 e2a9f e2a9f e2aa1
+.names 1 97875 97875 9787a
 11- 1
-0-0 1
-.names 0 e2aa1 e2aa1 e2aa2
+0-1 1
+.names 0 9787a 9787a 9787b
 11- 1
-0-0 1
-.names e2aa2 f0
-1 1
+0-1 1
+.names 9787b f0
+0 1
 .end

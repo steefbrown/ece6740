@@ -1,0 +1,11 @@
+INORDER = x y z;
+OUTORDER = g;
+fffef = 1;
+ffff5 = !z*!fffef + z*fffef;
+100004 = !y*ffff5 + y*fffef;
+ffffa = !y*ffff5 + y*ffff5;
+q = !x*ffffa + x*100004;
+ffb5c = 1;
+ffb61 = !y*!ffb5c + y*ffb5c;
+d = !x*ffb61 + x*ffb5c;
+g = q*d;

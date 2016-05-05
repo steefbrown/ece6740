@@ -15,17 +15,17 @@ Number of inputs: 3
 
 Printing the BDD for f: ptr to the nodes, T & E children
 
-: 4 nodes 1 leaves 3 minterms
-ID =  0x3953b	index = 0	T = 0x39538	E =  0x3953a
-ID =  0x3953a	index = 1	T = 0x39538	E = !1        
-ID =  0x39538	index = 2	T = 1        	E = !1        
+: 4 nodes 1 leaves 1 minterms
+ID = !0x4a6be	index = 0	T = 1        	E =  0x4a6bd
+ID =  0x4a6bd	index = 1	T = 1        	E =  0x4a6b8
+ID =  0x4a6b8	index = 2	T = 1        	E = !1        
 
 
 
 **************COUNTING BDD NODES***************
 
 
-Top node: 0x72A760 
+Top node: 0x94D7C1 
 
 Number of nodes: 4 
 
@@ -34,47 +34,51 @@ Number of levels: 3
 
 **************DETERMINING BOUNDSET AND FREESET NODES***************
 
-Node: 72A640 
+Node: 94D640 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 72A700 
+Node: 94D700 
 Node index: 2 
 i: 2 
 
-Node: 72A740 
+Node: 94D7A0 
 Node index: 1 
 i: 1 
 
-Node: 72A760 
+Adding node to our bound set*****************************
+boundsetSize increments to: 1
+Node: 94D7C0 
 Node index: 0 
 i: 0 
 
+Adding node to our bound set*****************************
+boundsetSize increments to: 2
 
 
 
- T node value: 72A700
+ T node value: 94D640
 number edges: 0 
-E node value: 72A641
-number edges: 1 
+E node value: 94D700
+number edges: 0 
 
 
 
- T node value: 72A700
-number edges: 1 
-E node value: 72A740
-number edges: 1 
-Cut Level: 2
+ T node value: 94D640
+number edges: 0 
+E node value: 94D7A0
+number edges: 0 
+Cut Level: 0
 
-Number of Sigma Zero Edges = 1
+Number of Sigma Zero Edges = 0
 i: 2147483647 
 i: 2 
 i: 1 
 i: 0 
-boundsetSize: 2
-n: 2
-Bound Set: 72A740, 72A760,
-Free Set: 72A640, 72A700,
+boundsetSize: 0
+n: 4
+Bound Set:
+Free Set: 94D640, 94D700, 0, 0,
 
 
 **************DETERMINING NUMBER OF SIG ZERO EDGES***************
@@ -83,23 +87,11 @@ Free Set: 72A640, 72A700,
 
 **************BUILDING DIVISOR BDD***************
 
-Entering for loop. i = 0
-Node is in freeset. j = 1
-Node was redirected to one node.
-Entering for loop. i = 1
-Node is in freeset. j = 1
-Node was redirected to one node.
-BDD reordering with sifting: from 7 to ... 6 nodes in 0 sec
+Dumping out the divisor
 
 
 **************BUILDING QUOTIENT BDD***************
 
-Entering for QUOTIENT loop. i = 0
-Quotient T child fine.
-Quotient E child fine.
-Entering for QUOTIENT loop. i = 1
-Quotient T child fine.
-Quotient E child fine.
 Printing Quotient BLIF
 Printing Quotient DOT
 
@@ -110,61 +102,45 @@ End of Bi-Decomposition Method.
 
 Starting Functional Decomposition Method
 
-Node: 73FB80 
+Node: 962B80 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 73FC40 
+Node: 962C40 
 Node index: 2 
 i: 2 
 
-Node: 73FC80 
+Node: 962CE0 
 Node index: 1 
 i: 1 
 
-Node: 73FCA0 
+Node: 962D00 
 Node index: 0 
 i: 0 
 
-Node: 748DE0 
+Node: 96BDE0 
 Node index: 2147483647 
 i: 2147483647 
 
-Node: 748EA0 
+Node: 96BEA0 
 Node index: 2 
 i: 2 
 
-Node: 748EE0 
+Node: 96BF40 
 Node index: 1 
 i: 1 
 
-Node: 748F00 
+Node: 96BF60 
 Node index: 0 
 i: 0 
 
-boundsetSize = 2
-Freeset Size = 2
-One node is: 73FB80
-Freeset[0] is: 72A640
-Freeset[1] is: 72A700
-Entering for boundset loop. i = 0, node = 748EA0
-Entering next loop. j = 0, node = 748EA0
-Entering next loop. j = 1, node = 748EA0
-Node is in freeset. j = 1, node = 748EA0
-Node was added to bset_cutset.
-Node was added to cutset.
-Already in boundset loop. i = 0, node = 748DE1
-Entering for boundset loop. i = 1, node = 748EA0
-Entering next loop. j = 0, node = 748EA0
-Entering next loop. j = 1, node = 748EA0
-Node is in freeset. j = 1, node = 748EA0
-Node was added to bset_cutset.
-Already in boundset loop. i = 1, node = 748EE0
-cvar = 1
+boundsetSize = 0
+Freeset Size = 4
+One node is: 962B80
+Freeset[0] is: 94D640
+Freeset[1] is: 94D700
+cvar = 0
 
-Cutset node[0] = 748EA0
-temp_cvar = 1
-i = 0
 temp_cvar = 0
 temp_cvar = 0
 temp_cvar = 0
@@ -196,99 +172,44 @@ temp_cvar = 0
 temp_cvar = 0
 temp_cvar = 0
 temp_cvar = 0
-number of bits = 2
+temp_cvar = 0
+number of bits = 1
 
-Our boundset nodes: 748EE0 748F00
-Our cutset nodes: 748EA0
-Added 748EE0 to our mapping, then child: 748EA0, else child: 748DE1
-Added 748EA0's encoding 0
-Added 748DE1's encoding 1
-Added 748F00 to our mapping, then child: 748EA0, else child: 748EE0
-Added 748EA0's encoding 0
-One Node = 748DE0, Zero Node = 748DE1
+Our boundset nodes:
+Our cutset nodes:
+One Node = 96BDE0, Zero Node = 96BDE1
 
 *********Mapping**********
-Mapping node = 748EE0, Mapping E_Enc = 1, Mapping T_Enc = 0
-Mapping node = 748F00, Mapping E_Enc = 0, Mapping T_Enc = 0
 
 *********End of Mapping**********
-Map_Node = 748EE0, Encoding = 0, Shifted Encoding = 0
-Map node child before assignment is: 748EA0
-Map node child after assignment is: 748DE1
+
+
+Printing the BDD for f BEFORE: ptr to the nodes, T & E children
+
+: 4 nodes 1 leaves 1 minterms
+ID = !0x4b5fb	index = 0	T = 1        	E =  0x4b5fa
+ID =  0x4b5fa	index = 1	T = 1        	E =  0x4b5f5
+ID =  0x4b5f5	index = 2	T = 1        	E = !1        
+
+Freeset node to be removed = 96BDE0
+Freeset node to be removed = 96BEA0
+Removing freeset 
+Freeset node to be removed = 96BF40
+Removing freeset 
+Freeset node to be removed = 96BF60
+Removing freeset 
 BDD reordering with sifting: from 7 to ... 7 nodes in 0 sec
 
 
-Printing the BDD for f: ptr to the nodes, T & E children
-
-Map_Node = 748EE0, Encoding = 1, Shifted Encoding = 1
-BDD reordering with sifting: from 7 to ... 7 nodes in 0 sec
-
-
-Printing the BDD for f: ptr to the nodes, T & E children
+Printing the BDD for f AFTER: ptr to the nodes, T & E children
 
 : 4 nodes 1 leaves 4 minterms
-ID =  0x3a478	index = 0	T = 0x3a475	E =  0x3a474
-ID =  0x3a474	index = 1	T = 1        	E = !1        
-ID =  0x3a475	index = 2	T = 1        	E = !1        
+ID = !0x4b5fb	index = 0	T = 0x4b5fa	E =  0x4b5fa
+ID =  0x4b5fa	index = 1	T = 0x4b5f5	E =  0x4b5f5
+ID =  0x4b5f5	index = 2	T = 1        	E = !1        
 
-Map_Node = 748F00, Encoding = 0, Shifted Encoding = 0
-Map node child before assignment is: 748EA0
-Map node child after assignment is: 748DE1
-BDD reordering with sifting: from 7 to ... 6 nodes in 0 sec
-
-
-Printing the BDD for f: ptr to the nodes, T & E children
-
-Map_Node = 748F00, Encoding = 0, Shifted Encoding = 0
-BDD reordering with sifting: from 6 to ... 6 nodes in 0 sec
-
-
-Printing the BDD for f: ptr to the nodes, T & E children
-
-: 2 nodes 1 leaves 4 minterms
-ID =  0x3a478	index = 0	T = 1        	E = !1        
-
-Root node: 748F00
+Root node: 96BF61
 filename: ash_curt_files/hw5_0.blif
-Creating blif...
-Optimizing variable ordering...
-Estimated delay: 0.5us...
-Map_Node = 748EE0, Encoding = 0, Shifted Encoding = 0
-Map node child before assignment is: 748F20
-Map node child after assignment is: 748DE1
-BDD reordering with sifting: from 6 to ... 6 nodes in 0 sec
-
-
-Printing the BDD for f: ptr to the nodes, T & E children
-
-Map_Node = 748EE0, Encoding = 1, Shifted Encoding = 0
-BDD reordering with sifting: from 6 to ... 6 nodes in 0 sec
-
-
-Printing the BDD for f: ptr to the nodes, T & E children
-
-: 2 nodes 1 leaves 4 minterms
-ID =  0x3a478	index = 0	T = 1        	E = !1        
-
-Map_Node = 748F00, Encoding = 0, Shifted Encoding = 0
-Map node child before assignment is: 748DE0
-Map node child after assignment is: 748DE1
-BDD reordering with sifting: from 6 to ... 6 nodes in 0 sec
-
-
-Printing the BDD for f: ptr to the nodes, T & E children
-
-Map_Node = 748F00, Encoding = 0, Shifted Encoding = 0
-BDD reordering with sifting: from 6 to ... 6 nodes in 0 sec
-
-
-Printing the BDD for f: ptr to the nodes, T & E children
-
-: 2 nodes 1 leaves 4 minterms
-ID =  0x3a478	index = 0	T = 1        	E = !1        
-
-Root node: 748F00
-filename: ash_curt_files/hw5_1.blif
 Creating blif...
 Optimizing variable ordering...
 Estimated delay: 0.5us...

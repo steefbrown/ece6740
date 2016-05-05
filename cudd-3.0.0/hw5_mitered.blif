@@ -1,0 +1,25 @@
+# Benchmark "DD" written by ABC on Thu May  5 13:02:15 2016
+.model DD
+.inputs x y z
+.outputs miter
+.names x y n5
+01 1
+.names x n5 n6
+00 1
+.names y z n7
+01 1
+.names y n7 n8
+00 1
+.names x n8 n9
+10 1
+.names y z n10
+11 1
+.names n7 n10 n11
+00 1
+.names x n11 n12
+00 1
+.names n9 n12 n13
+00 1
+.names n6 n13 miter
+00 1
+.end
