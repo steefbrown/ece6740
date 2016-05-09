@@ -601,6 +601,9 @@ main(
     boundsetSize = 0;
     n = 0;
 
+    // To simplify the implementation, use the same cut level as the 
+    // Boolean Bi-decomposition method
+    // Create the bound set and the free set for the ash BDD
     Cudd_ForeachNode(dd_ash,node_ash->dd,test_gen,test_node){
         i = test_node->index;
         printf("Node: %X \n", test_node);
@@ -614,7 +617,8 @@ main(
     
     boundsetSize = 0;
     n = 0;
-
+    
+    // Create the bound set and the free set for the curt BDD
     Cudd_ForeachNode(dd_curt,node_curt->dd,test_gen,test_node){
         i = test_node->index;
         Cudd_bddBindVar(dd_curt, i);

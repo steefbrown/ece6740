@@ -1,0 +1,127 @@
+README
+
+ECE 6740 - Logic Synth. & Verif.
+Class Project
+Team:
+    Andrew Bradbury
+    Steven Brown
+    Denver Hoggatt
+
+PROJECT DESCRIPTIONn: 
+This project attempts to perform both Boolean Bi-decomposition
+(particulary AND decomposition) and functional decomposition (particularly the
+Ashtenhusrt-Curtis method of functional decomposition). This project is built
+on the CUDD package. The following describes how to use and interpret the
+results of this project.
+
+INCLUDED FILES:
+    - hw5.blif -- Example circuit with multiple outputs
+    - hw5_divisor.blif -- Divisor output
+    - hw5_divisor.dot -- Divisor output
+    - hw5_divisor.eqn -- Divisor output
+    - hw5.eqn -- EQN format of example circuit with multiple outputs
+    - hw5_g.blif -- Example circuit with single output
+    - hw5_g_decomp.blif -- BLIF file of combined divisor and quotient
+    - hw5_g_decomp.eqn -- EQN file of combined divisor and quotient
+    - hw5_g.eqn -- Example circuit with single output
+    - hw5_mitered.blif -- Miter circuit of decomposed circuit with example 
+                          circuit
+    - hw5_quo.dot -- Original circuit
+    - hw5_quotient.blif -- Quotient output
+    - hw5_quotient.dot -- Quotient output
+    - hw5_quotient.eqn -- Quotient output
+    - ash_curt_files/
+        - hw5_0.blif -- LSB of bound set output
+        - hw5_0.eqn   
+        - hw5_1.blif -- MSB of bound set output
+        - hw5_1.eqn
+
+
+INSTRUCTIONS
+1. Download and configure the CUDD package as described in the CUDD README.
+2. Replace the main.c file in the nanotrav/ directory with the main.c file of
+   this project.
+3. Run the command "mkdir ash_curt_files" to make a directory for the files
+   from the functional decomposition method.
+4. Run "make" and "make check" to complie the program inside the the cudd
+   directory. This compiles and produces a binary program called "nanotrav"
+   inside of the nanotrav/ directory.
+5. Run the nanotrav binary and provide a .blif file as the first and only
+   arguement. As part of the example that we provide, you can run the command
+   "nanotrav/nanotrav hw5_g.blif" from the cudd directory, or you can chnage
+   to the nanotrav/ directory and run the commnad "nanotrav hw5_g.blif". 
+6. The program will produce the following outputs:
+        For Boolean Bi-Decomposition:
+            hw5_divisor.blif - BLIF file of the Boolean divisor
+            hw5_divisor.dot  - DOT file of the Boolean divisor
+            hw5_quotient.blif- BLIF file of the Boolean quotient   
+            hw5_quotient.dot - DOT file fo the Boolean quotient
+
+        *Note: these names are hardcoded, so any .blif file that the
+         program runs will produce an output with the above names.
+        
+        For Functional Decomposition:
+            hw5_0.blif   - BLIF file of the LSB of the bound set output
+            hw5_0.dot    - DOT file of the LSB of the bound set output
+            ...
+            hw5_{i}.blif - BLIF file of the MSB of the bound set output
+            hw5_{i}.dot  - DOT file of the MSB of the bound set output
+
+        *Note: Functional decomposition may or may not produce more than one
+         output, therefore, the files are consolidated in the ash_curt_files/
+         directory. Since the output of the functional decomposition is just
+         the BLIF files that represent each output of the bound set, the names
+         represent the order of the outputs where 0 is the LBS and i is the
+         MSB.
+            
+7. With the outputs, we can now use SIS to make the comparisons. Inorder to do
+   this, we need to combine the output from the program into a single .blif
+   file. This can also be done with SIS using the following steps:
+
+        sis> read_blif hw5_divisor.blif
+        sis> write_eqn hw5_divisor.eqn
+        sis> read_blif hw5_quotient.blif
+        sis> write_eqn hw5_qotient.eqn
+
+   Now that we have the .eqn files, we can combine them into one. Create a new
+   file called "hw5_g_decomp.eqn". The input should contian all the inputs 
+   from the hw5_g.blif example. Copy both the equations from the divisor and 
+   the equations from the quotient. Set the output as "g" or "f" or whatever, 
+   you want, but make sure to insert the line "g = d*q;" such that the function
+   now represents the Boolean Bi-decomposition. 
+
+   To make the comparisons, you can follow the example here (also seen in 
+   typescript):
+        
+        sis> read_eqn hw5_g_decomp.eqn
+        sis> write_blif hw5_g_decomp.blif
+        sis>
+        sis> read_blif hw5_g.blif
+        sis> print_stats
+        sis> read_library lib2.genlib
+        sis> read_library -a lib2_latch.genlib
+        sis> map
+        sis> print_map_stats
+        sis> source script.delay
+        sis> print_map_stats
+        sis>
+        sis> read_blif hw5_g_decomp.blif
+        sis> print_stats
+        sis> map
+        sis> print_map_stats
+        sis> source script.delay
+        sis> print_map_stats
+
+8. We can also use ABC to determine if the decomposed function is functionally
+   correct. This can be done by performing a miter between "hw5_g.blif" and
+   "hw5_g_decomp.blif". The two circuits are determined to be functinally
+   correct if the miter test passes. 
+
+
+9. The outputs of the functional decomposition implemenation can be check by
+   hand by referencing the results found in the ash_curt_files/ directory.
+   Please refer to the project report for challenges and limitations that
+   prevented the complete implemenation and comparison of the functional
+   decompositon method.
+
+END README
